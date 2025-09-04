@@ -1,0 +1,43 @@
+import type { ReactNode } from 'react';
+import type { Metadata } from 'next';
+import { ThemeProvider } from 'next-themes';
+import { Exo } from 'next/font/google';
+
+import '@/app/globals.css';
+import Provider from '@/components/Provider';
+import Nav from '@/components/Nav';
+
+// Google Font via next/font
+const exo = Exo({
+  subsets: ['latin'],
+  display: 'swap',
+});
+
+export const metadata: Metadata = {
+    title: 'Moss FM',
+    description: 'Moss FM portfolio | Software Engineer'
+};
+
+const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
+    return (
+        <html suppressHydrationWarning lang="en">
+            <head>
+                
+            </head>
+            <body className={exo.className}>
+                <Provider>
+                <div className="main">
+                    <div className="gradient" />
+                </div>
+
+                <main className="app">
+                    <Nav />
+                    <ThemeProvider attribute='class' defaultTheme="dark">{children}</ThemeProvider>
+                </main>
+                </Provider>
+            </body>
+        </html>
+    );
+};
+
+export default Layout;

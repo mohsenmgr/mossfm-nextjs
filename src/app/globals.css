@@ -1,0 +1,93 @@
+@import 'tailwindcss';
+
+@custom-variant light (&:is(.light *));
+
+
+html, body {
+  font-family: "Exo", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+    }
+
+.wrapper {
+    height: auto;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .effect-wrapper {
+    text-align: center;
+    font-weight: normal;
+  }
+  
+  #typed {
+    font-weight: bold;
+    color: #bbf7d0;
+  }
+  
+  .cursor {
+    display: inline-block;
+    width: 10px; /* adjust for thickness */
+    height: auto; /* match font height */
+    background-color: #bbf7d0;
+    animation: blinker 800ms infinite;
+  }
+  
+  .cursor.typing-true {
+    animation: none;
+  }
+  
+  @keyframes blinker {
+    0% { background-color: #bbf7d0; }
+    50% { background-color: transparent; }
+    100% { background-color: #bbf7d0; }
+  }
+
+  :root {
+    --pillar-width: clamp(340px, 18vw, 340px);
+    --header-height: 59px;
+    background:#0D343A;
+    background:-webkit-gradient(linear,0% 0%,0% 100%, from(#000000), to(rgba(13,52,58,1)));
+    background: linear-gradient(top, rgba(0,0,0,1) 100%, rgba(13,52,58,1) 0%);
+  }
+
+
+/* Hide pillars on small screens */
+@media (max-width: 767px) {
+    .pillar {
+    display: none;
+    }
+}
+
+
+
+  .site-header {
+  justify-content: space-between; /* or flex-start if you want */
+}
+
+  /* Main content spacing */
+  .site-main {
+    
+    margin-left: 0;
+    margin-right: 0;
+  }
+  @media (min-width: 768px) {
+    .site-main {
+      margin-left: var(--pillar-width);
+      margin-right: var(--pillar-width);
+    }
+  }
+
+  /* Hide pillars on small screens */
+  @media (max-width: 767px) {
+    .pillar {
+      display: none;
+    }
+  }
+
+
+  /* OTHER CSS STYLE */
+  
