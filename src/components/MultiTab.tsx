@@ -92,7 +92,7 @@ function MultiTab({ job }: MultiTabProps) {
               </h2>
               <ul
                 role="list"
-                className="space-y-4 text-gray-500 dark:text-gray-400"
+                className="space-y-4 text-gray-500 dark:text-gray-100"
               >
                 {job.responsibilities.items.map((item, idx) => (
                   <li
@@ -100,7 +100,7 @@ function MultiTab({ job }: MultiTabProps) {
                     className="flex space-x-2 rtl:space-x-reverse items-center"
                   >
                     <svg
-                      className="shrink-0 w-3.5 h-3.5 text-blue-600 dark:text-blue-500"
+                      className="shrink-0 w-3.5 h-3.5 text-green-600 dark:text-green-500"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"

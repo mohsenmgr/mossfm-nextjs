@@ -32,20 +32,26 @@ function Work() {
 
 
   return (
-        <main className="flex-1 max-w-4xl mx-auto p-8 min-h-[1300px]">
 
-        <div className="space-y-8">
+      <div className="flex flex-col min-h-screen">
+        <div className="flex flex-1">
+            <main className="flex-1 max-w-4xl mx-auto pt-8 min-h-[1300px]">
 
-        <section>
-          {
-          loading
-          ? Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} />)
-          : jobs.map((job) => <MultiTab key={job._id as string} job={job} />)
-          }
-        </section>
+            <div className="space-y-8">
 
+            <section>
+            {
+            loading
+            ? Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} />)
+            : jobs.map((job) => <MultiTab key={job._id as string} job={job} />)
+            }
+            </section>
+
+            </div>
+            </main>
         </div>
-        </main>
+    </div>
+    
   )
 }
 

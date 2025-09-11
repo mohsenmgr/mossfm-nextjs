@@ -6,6 +6,7 @@ import { Exo } from 'next/font/google';
 import '@/app/globals.css';
 import Provider from '@/components/Provider';
 import Nav from '@/components/Nav';
+import { Analytics } from "@vercel/analytics/next"
 
 // Google Font via next/font
 const exo = Exo({
@@ -35,6 +36,7 @@ const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
                     <ThemeProvider attribute='class' defaultTheme="dark">{children}</ThemeProvider>
                 </main>
                 </Provider>
+                <Analytics />
             </body>
         </html>
     );
