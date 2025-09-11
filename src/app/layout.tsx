@@ -6,6 +6,8 @@ import { Exo } from 'next/font/google';
 import '@/app/globals.css';
 import Provider from '@/components/Provider';
 import Nav from '@/components/Nav';
+import Footer from '@/components/Footer';
+
 import { Analytics } from "@vercel/analytics/next"
 
 // Google Font via next/font
@@ -34,6 +36,7 @@ const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
                 <main className="app">
                     <Nav />
                     <ThemeProvider attribute='class' defaultTheme="dark">{children}</ThemeProvider>
+                    <Footer />
                 </main>
                 </Provider>
                 <Analytics />
