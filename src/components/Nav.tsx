@@ -13,7 +13,11 @@ function Nav() {
       <header className="site-header sticky top-0 z-50 bg-gray-900 shadow-lg backdrop-blur-sm px-6 h-20 flex items-center w-full">
         <div className="grid grid-cols-[auto_1fr_auto] items-center flex-1 gap-4">
           <div className="text-2xl font-extrabold text-white select-none text-center whitespace-nowrap">
+             <Link
+              href="/"
+            >
             Mohsen FM
+            </Link>
           </div>
         </div>
 
