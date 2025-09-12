@@ -1,5 +1,5 @@
 import { NextAuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 import connectToDB from "@/lib/mongoose";
 import User from "@/models/user";
 
@@ -12,9 +12,13 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async session({ session }) {
-      const sessionUser = await User.findOne({ email: session.user?.email });
+      // Connect to DB before querying
+      await connectToDB();
 
-      if (session.user && sessionUser) {
+      if (!session.user?.email) return session;
+
+      const sessionUser = await User.findOne({ email: session.user.email });
+      if (sessionUser) {
         session.user.id = sessionUser._id.toString();
       }
 
@@ -22,9 +26,12 @@ export const authOptions: NextAuthOptions = {
     },
 
     async signIn({ account, profile }) {
-      if (!account || account.provider !== "google") return false;
-      const googleProfile = profile as any;
+      // Connect to DB immediately
+      await connectToDB();
 
+      if (!account || account.provider !== "google") return false;
+
+      const googleProfile = profile as GoogleProfile;
       if (!googleProfile?.email) return false;
 
       const allowedEmails = ["mohsenmgr@gmail.com", "faghfourmaghrebi@gmail.com"];
@@ -32,8 +39,6 @@ export const authOptions: NextAuthOptions = {
         console.warn("Unauthorized login attempt:", googleProfile.email);
         return false;
       }
-
-      await connectToDB();
 
       const userExists = await User.findOne({ email: googleProfile.email });
       if (!userExists) {
@@ -47,4 +52,5 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
   },
+  debug: true, // optional: logs everything to Vercel logs
 };
