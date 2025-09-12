@@ -80,7 +80,7 @@ function Nav() {
             </Link>
           </li>
           <Link
-            href="/cv"
+             href="/api/cv"
             className="relative overflow-hidden border border-white text-white px-5 py-2 rounded-md font-semibold transition-colors duration-500 group"
           >
             <span className="absolute inset-0 bg-green-200 origin-bottom-left scale-x-0 transition-transform duration-700 ease-in-out group-hover:scale-x-100"></span>
