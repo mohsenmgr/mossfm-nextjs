@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // must export authOptions in your auth route
+import { authOptions } from "@/lib/authOptions";
 import DashboardClient from "@/components/DashboardClient";
 
 export const dynamic = "force-dynamic"; // ensure no caching of session checks
