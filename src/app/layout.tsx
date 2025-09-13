@@ -1,19 +1,20 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, Suspense } from 'react';
+
 import type { Metadata } from 'next';
-import { ThemeProvider } from 'next-themes';
 import { Exo } from 'next/font/google';
 
-import '@/app/globals.css';
-import Provider from '@/components/Provider';
-import Nav from '@/components/Nav';
-import Footer from '@/components/Footer';
+import { ThemeProvider } from 'next-themes';
 
-import { Analytics } from "@vercel/analytics/next"
+import '@/app/globals.css';
+import Footer from '@/components/Footer';
+import Nav from '@/components/Nav';
+import Provider from '@/components/Provider';
+import { Analytics } from '@vercel/analytics/next';
 
 // Google Font via next/font
 const exo = Exo({
-  subsets: ['latin'],
-  display: 'swap',
+    subsets: ['latin'],
+    display: 'swap'
 });
 
 export const metadata: Metadata = {
@@ -23,21 +24,21 @@ export const metadata: Metadata = {
 
 const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
     return (
-        <html suppressHydrationWarning lang="en">
-            <head>
-                
-            </head>
+        <html suppressHydrationWarning lang='en'>
+            <head></head>
             <body className={exo.className}>
                 <Provider>
-                <div className="main">
-                    <div className="gradient" />
-                </div>
+                    <div className='main'>
+                        <div className='gradient' />
+                    </div>
 
-                <main className="app">
-                    <Nav />
-                    <ThemeProvider attribute='class' defaultTheme="dark">{children}</ThemeProvider>
-                    <Footer />
-                </main>
+                    <main className='app'>
+                        <Nav />
+                        <ThemeProvider attribute='class' defaultTheme='dark'>
+                            <Suspense> {children}</Suspense>
+                        </ThemeProvider>
+                        <Footer />
+                    </main>
                 </Provider>
                 <Analytics />
             </body>

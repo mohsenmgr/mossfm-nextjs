@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, Suspense, useEffect, useState } from 'react';
 
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
@@ -23,17 +23,14 @@ interface Prompt {
 
 export default function EditPromptPage() {
     const router = useRouter();
-    const params = useParams();
+    const searchParams = useSearchParams();
+    const promptId = searchParams.get('id');
+
     const { data: session } = useSession();
 
     const [post, setPost] = useState({ prompt: '', tag: '' });
     const [submitting, setSubmitting] = useState(false);
     const [loading, setLoading] = useState(true);
-
-    const searchParams = useSearchParams();
-    const promptId = searchParams.get('id');
-
-    console.log(promptId);
 
     // Fetch the prompt data
     useEffect(() => {

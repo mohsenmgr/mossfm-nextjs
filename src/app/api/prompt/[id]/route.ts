@@ -5,14 +5,8 @@ import Prompt, { IPrompt } from '@models/prompt';
 
 import { Types } from 'mongoose';
 
-interface RouteParams {
-    params: {
-        id: string;
-    };
-}
-
 // GET (read)
-export const GET = async (_req: NextRequest, { params }: RouteParams): Promise<Response> => {
+export const GET = async (_req: NextRequest, { params }: { params: Promise<{ id: string }> }): Promise<Response> => {
     try {
         const { id } = await params;
 
@@ -36,7 +30,7 @@ export const GET = async (_req: NextRequest, { params }: RouteParams): Promise<R
 };
 
 // PATCH (update)
-export const PATCH = async (req: NextRequest, { params }: RouteParams): Promise<Response> => {
+export const PATCH = async (req: NextRequest, { params }: { params: Promise<{ id: string }> }): Promise<Response> => {
     try {
         const { id } = await params;
         const { prompt, tag }: { prompt: string; tag: string } = await req.json();
@@ -65,7 +59,7 @@ export const PATCH = async (req: NextRequest, { params }: RouteParams): Promise<
 };
 
 // DELETE (delete)
-export const DELETE = async (_req: NextRequest, { params }: RouteParams): Promise<Response> => {
+export const DELETE = async (_req: NextRequest, { params }: { params: Promise<{ id: string }> }): Promise<Response> => {
     try {
         const { id } = await params;
 
