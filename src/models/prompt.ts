@@ -1,20 +1,29 @@
-import { Schema,model, models } from "mongoose";
+// models/prompt.ts
+import { Document, Model, Schema, model, models } from 'mongoose';
 
-const PromptSchema = new Schema({
+export interface IPrompt extends Document {
+    creator: Schema.Types.ObjectId; // reference to User
+    prompt: string;
+    tag: string;
+}
+
+const PromptSchema = new Schema<IPrompt>({
     creator: {
-        type: Schema.Types.ObjectId, // creator is a document in the database
-        ref: 'User'   // one to many relationship, a user can create many prompts
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
     prompt: {
         type: String,
-        required: [true, 'Prompt is required'],
+        required: [true, 'Prompt is required']
     },
     tag: {
         type: String,
-        required: [true, 'Tag is required'],
-    },
+        required: [true, 'Tag is required']
+    }
 });
 
-const Prompt = models.Prompt || model("Prompt", PromptSchema);
+// Add generic so TS knows model shape
+const Prompt: Model<IPrompt> = (models.Prompt as Model<IPrompt>) || model<IPrompt>('Prompt', PromptSchema);
 
 export default Prompt;
