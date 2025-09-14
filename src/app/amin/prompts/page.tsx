@@ -59,33 +59,41 @@ export default function PromptPage() {
                 ))}
             </main>
         );
-    return (
-        <main className='mx-auto min-h-screen max-w-6xl flex-1 p-6'>
-            <button
-                onClick={() => router.push('/amin/dashboard')}
-                className='mb-6 rounded-lg bg-green-600 px-4 py-2 text-white transition hover:bg-green-500'>
-                ← Back to Dashboard
-            </button>
 
-            <div className='mb-4 flex items-center justify-between'>
-                <h1 className='text-3xl font-bold text-white'>Manage Prompts</h1>
+    if (status !== 'unauthenticated')
+        return (
+            <main className='mx-auto min-h-screen max-w-6xl flex-1 p-6'>
                 <button
-                    onClick={() => router.push('/amin/prompts/new')}
-                    className='rounded-lg bg-green-600 px-4 py-2 text-white transition hover:bg-green-500'>
-                    + Create Prompt
+                    onClick={() => router.push('/amin/dashboard')}
+                    className='mb-6 rounded-lg bg-green-600 px-4 py-2 text-white transition hover:bg-green-500'>
+                    ← Back to Dashboard
                 </button>
-            </div>
 
-            <div className='min-h-[80vh] rounded-2xl bg-gray-900 p-6 shadow-lg dark:bg-gray-800'>
-                <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
-                    <PromptCardList
-                        posts={posts}
-                        currentUserId={session?.user.id}
-                        onDelete={handleDelete}
-                        onEdit={handleEdit}
-                    />
+                <div className='mb-4 flex items-center justify-between'>
+                    <h1 className='text-3xl font-bold text-white'>Manage Prompts</h1>
+                    <button
+                        onClick={() => router.push('/amin/prompts/new')}
+                        className='rounded-lg bg-green-600 px-4 py-2 text-white transition hover:bg-green-500'>
+                        + Create Prompt
+                    </button>
                 </div>
-            </div>
-        </main>
-    );
+
+                <div className='min-h-[80vh] rounded-2xl bg-gray-900 p-6 shadow-lg dark:bg-gray-800'>
+                    <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+                        <PromptCardList
+                            posts={posts}
+                            currentUserId={session?.user.id}
+                            onDelete={handleDelete}
+                            onEdit={handleEdit}
+                        />
+                    </div>
+                </div>
+            </main>
+        );
+    else
+        return (
+            <main className='mx-auto flex min-h-screen max-w-6xl flex-1 items-center justify-center p-6'>
+                <span className='text-9xl'>🖕</span>
+            </main>
+        );
 }

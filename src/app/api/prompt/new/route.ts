@@ -10,7 +10,7 @@ export const POST = async (req: NextRequest) => {
 
         const { userId, prompt, tag }: { userId: string; prompt: string; tag: string } = await req.json();
 
-        const newPrompt: IPrompt = new Prompt({
+        const newPrompt = new Prompt({
             creator: userId,
             prompt,
             tag
