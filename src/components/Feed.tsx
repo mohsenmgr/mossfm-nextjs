@@ -1,126 +1,137 @@
-"use client";
+'use client';
 
-import React, { useState, useRef } from "react";
-import Image from "next/image";
+import React, { useRef, useState } from 'react';
 
-interface FeedItem {
-  id: string;
-  text: string;
-  imageUrl?: string;
-  createdAt: string; // ISO date string
+import Image from 'next/image';
+
+import { useFeedFetch } from '@/hooks/usePaginatedFetch';
+
+export interface FeedItem {
+    _id: string;
+    text: string;
+    imageUrl?: string;
+    hidden: boolean;
+    createdAt: string;
 }
 
 interface FeedProps {
-  items: FeedItem[];
-  profileImage: string; // your avatar URL
-  authorName: string;
+    apiUrl: string; // e.g., '/api/feed'
+    profileImage: string;
+    authorName: string;
 }
 
-const Feed: React.FC<FeedProps> = ({ items, profileImage, authorName }) => {
-  // which image is expanded and its computed height in px
-  const [expanded, setExpanded] = useState<{ id: string | null; height: number | null }>({
-    id: null,
-    height: null,
-  });
-
-  // store refs to each image container to measure width
-  const containerRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-
-  // toggle expand/collapse for an item
-  const handleToggle = async (item: FeedItem) => {
-    // collapse if clicking the same one
-    if (expanded.id === item.id) {
-      setExpanded({ id: null, height: null });
-      return;
-    }
-
-    // ensure we have an image URL
-    if (!item.imageUrl) return;
-
-    const container = containerRefs.current.get(item.id);
-    const containerWidth = container?.clientWidth ?? Math.min(window.innerWidth, 720);
-
-    // preload to get natural dimensions
-    const img = new window.Image();
-    img.src = item.imageUrl;
-
-    await new Promise<void>((resolve) => {
-      if (img.complete && img.naturalWidth) return resolve();
-      img.onload = () => resolve();
-      img.onerror = () => resolve(); // still resolve on error, fallback dims used
+const Feed: React.FC<FeedProps> = ({ apiUrl, profileImage, authorName }) => {
+    const [expanded, setExpanded] = useState<{ _id: string | null; height: number | null }>({
+        _id: null,
+        height: null
     });
 
-    const naturalW = img.naturalWidth || containerWidth;
-    const naturalH = img.naturalHeight || Math.round(containerWidth * 0.6);
+    const containerRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
-    // calculate scaled height to maintain aspect ratio for the current container width
-    let scaledHeight = Math.round((naturalH * containerWidth) / naturalW);
+    // Fetch paginated feed
+    const { data: items = [], loading, loadMore, hasMore } = useFeedFetch<FeedItem>(apiUrl, 5);
 
-    // cap height to 80% of viewport to avoid huge expansions
-    const maxAllowed = Math.round(window.innerHeight * 0.8);
-    if (scaledHeight > maxAllowed) scaledHeight = maxAllowed;
+    const handleToggle = async (item: FeedItem) => {
+        if (expanded._id === item._id) {
+            setExpanded({ _id: null, height: null });
+            return;
+        }
 
-    setExpanded({ id: item.id, height: scaledHeight });
-  };
+        if (!item.imageUrl) return;
 
-  return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      {items.map((item) => (
-        <div
-          key={item.id}
-          className="flex items-start space-x-4 bg-white dark:bg-gray-900 rounded-2xl shadow-md p-5 transition hover:shadow-lg"
-        >
-          <Image
-            src="/images/mohsen.png"
-            alt="Moss FM"
-            className="w-12 h-12 rounded-full border border-gray-300 dark:border-gray-700"
-            width={48}
-            height={48}
-          />
+        const container = containerRefs.current.get(item._id);
+        const containerWidth = container?.clientWidth ?? Math.min(window.innerWidth, 720);
 
-          {/* Content */}
-          <div className="flex-1">
-            <div className="flex justify-between items-center">
-              <span className="font-semibold text-gray-900 dark:text-white">{authorName}</span>
-              <span className="text-xs text-gray-500">{new Date(item.createdAt).toLocaleString()}</span>
-            </div>
+        const img = new window.Image();
+        img.src = item.imageUrl;
 
-            <p className="mt-2 text-gray-700 dark:text-gray-300 whitespace-pre-line">{item.text}</p>
+        await new Promise<void>((resolve) => {
+            if (img.complete && img.naturalWidth) return resolve();
+            img.onload = () => resolve();
+            img.onerror = () => resolve();
+        });
 
-            {/* Image: collapsed = fixed height (cropped), expanded = computed height showing full scaled image */}
-            {item.imageUrl && (
-              <div className="mt-3">
+        const naturalW = img.naturalWidth || containerWidth;
+        const naturalH = img.naturalHeight || Math.round(containerWidth * 0.6);
+
+        let scaledHeight = Math.round((naturalH * containerWidth) / naturalW);
+        const maxAllowed = Math.round(window.innerHeight * 0.8);
+        if (scaledHeight > maxAllowed) scaledHeight = maxAllowed;
+
+        setExpanded({ _id: item._id, height: scaledHeight });
+    };
+
+    // Filter out hidden posts for public feed
+    const visibleItems = items.filter((item) => !item.hidden);
+
+    if (loading && visibleItems.length === 0) {
+        return <div className='flex justify-center py-10 text-gray-500'>Loading feed...</div>;
+    }
+
+    return (
+        <div className='mx-auto max-w-2xl space-y-6'>
+            {visibleItems.map((item) => (
                 <div
-                  // container needs to be relative for next/image fill
-                  ref={(el) => {
-                    if (el) containerRefs.current.set(item.id, el);
-                    else containerRefs.current.delete(item.id);
-                  }}
-                  onClick={() => handleToggle(item)}
-                  className={`relative w-full max-w-xl rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer transition-all duration-300 ${
-                    expanded.id === item.id ? "" : "h-64"
-                  }`}
-                  // when expanded, set computed height inline so next/image fill fits that height
-                  style={expanded.id === item.id && expanded.height ? { height: `${expanded.height}px`, maxHeight: "80vh" } : undefined}
-                >
-                  <Image
-                    src={item.imageUrl}
-                    alt="post"
-                    fill
-                    className={`rounded-xl ${expanded.id === item.id ? "object-contain" : "object-cover"}`}
-                  />
-                </div>
+                    key={item._id}
+                    className='flex items-start space-x-4 rounded-2xl bg-white p-5 shadow-md transition hover:shadow-lg dark:bg-gray-900'>
+                    <Image
+                        src={profileImage}
+                        alt={authorName}
+                        className='h-12 w-12 rounded-full border border-gray-300 dark:border-gray-700'
+                        width={48}
+                        height={48}
+                    />
 
-                <p className="mt-1 text-xs text-gray-500 text-center">
-                  {expanded.id === item.id ? "Click to collapse" : "Click to expand"}
-                </p>
-              </div>
+                    <div className='flex-1'>
+                        <div className='flex items-center justify-between'>
+                            <span className='font-semibold text-gray-900 dark:text-white'>{authorName}</span>
+                            <span className='text-xs text-gray-500'>{new Date(item.createdAt).toLocaleString()}</span>
+                        </div>
+
+                        <p className='mt-2 whitespace-pre-line text-gray-700 dark:text-gray-300'>{item.text}</p>
+
+                        {item.imageUrl && (
+                            <div className='mt-3'>
+                                <div
+                                    ref={(el) => {
+                                        if (el) containerRefs.current.set(item._id, el);
+                                        else containerRefs.current.delete(item._id);
+                                    }}
+                                    onClick={() => handleToggle(item)}
+                                    className={`relative w-full max-w-xl cursor-pointer overflow-hidden rounded-xl border border-gray-200 transition-all duration-300 dark:border-gray-700 ${
+                                        expanded._id === item._id ? '' : 'h-64'
+                                    }`}
+                                    style={
+                                        expanded._id === item._id && expanded.height
+                                            ? { height: `${expanded.height}px`, maxHeight: '80vh' }
+                                            : undefined
+                                    }>
+                                    <Image
+                                        src={item.imageUrl}
+                                        alt='post'
+                                        fill
+                                        className={`rounded-xl ${expanded._id === item._id ? 'object-contain' : 'object-cover'}`}
+                                    />
+                                </div>
+
+                                <p className='mt-1 text-center text-xs text-gray-500'>
+                                    {expanded._id === item._id ? 'Click to collapse' : 'Click to expand'}
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            ))}
+
+            {hasMore && (
+                <button
+                    onClick={loadMore}
+                    className='w-full rounded-lg bg-green-600 px-4 py-2 text-white transition hover:bg-green-500'>
+                    {loading ? 'Loading...' : 'Load More'}
+                </button>
             )}
-          </div>
         </div>
-      ))}
-    </div>
-  );
+    );
 };
 
 export default Feed;
