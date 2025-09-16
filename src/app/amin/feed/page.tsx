@@ -1,13 +1,16 @@
 'use client';
 
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import { useFeedFetch } from '@/hooks/usePaginatedFetch';
+import type { FeedImage } from '@/types/feed';
+import { AdvancedImage } from '@cloudinary/react';
 
 interface FeedItem {
     _id: string;
     text: string;
-    imageUrl?: string;
+    imageUrl: FeedImage | null;
     hidden: boolean;
     createdAt: string;
 }
@@ -15,7 +18,6 @@ interface FeedItem {
 export default function FeedAdminPage() {
     const router = useRouter();
 
-    // Use paginated fetch hook
     const {
         data: posts = [],
         loading,
@@ -23,23 +25,21 @@ export default function FeedAdminPage() {
         loadMore,
         removeItem,
         updateItem
-    } = useFeedFetch<FeedItem>('/api/feed?admin=true', 5); // admin=true includes hidden posts
+    } = useFeedFetch<FeedItem>('/api/feed?admin=true', 5);
 
-    // Delete post
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this post?')) return;
 
         try {
             const res = await fetch(`/api/feed/${id}`, { method: 'DELETE' });
             if (res.ok) {
-                removeItem(id); // update hook state locally
+                removeItem(id);
             }
         } catch (error) {
             alert(`Delete request failed ${error}`);
         }
     };
 
-    // Toggle hidden/unhidden
     const toggleHidden = async (id: string, hidden: boolean) => {
         const res = await fetch(`/api/feed/${id}`, {
             method: 'PATCH',
@@ -79,7 +79,22 @@ export default function FeedAdminPage() {
                         <p className='font-medium text-white'>{post.text}</p>
 
                         {post.imageUrl && (
-                            <img src={post.imageUrl} alt='' className='max-h-48 rounded-lg object-cover' />
+                            <div className='relative max-h-64 w-full overflow-hidden rounded-lg'>
+                                {post.imageUrl.type === 'cloudinary' ? (
+                                    <AdvancedImage
+                                        cldImg={post.imageUrl.value}
+                                        className='h-full w-full object-cover'
+                                    />
+                                ) : (
+                                    <Image
+                                        src={post.imageUrl.value}
+                                        alt='Post image'
+                                        width={600}
+                                        height={400}
+                                        className='h-full w-full object-cover'
+                                    />
+                                )}
+                            </div>
                         )}
 
                         <p className='text-xs text-gray-500'>{new Date(post.createdAt).toLocaleString()}</p>

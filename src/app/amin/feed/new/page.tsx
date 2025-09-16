@@ -1,21 +1,52 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
 export default function CreateFeedPage() {
     const router = useRouter();
     const [text, setText] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
+    const [file, setFile] = useState<File | null>(null);
+    const [folderName, setFolderName] = useState('feed');
     const [hidden, setHidden] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+    const handleFileClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setFile(e.target.files[0]);
+        }
+    };
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setSubmitting(true);
 
         try {
+            let imageUrl = '';
+
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('folderName', folderName);
+
+                const uploadRes = await fetch('/api/file/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!uploadRes.ok) throw new Error('Failed to upload image');
+
+                const { url } = await uploadRes.json();
+                imageUrl = url;
+            }
+
             const res = await fetch('/api/feed/new', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -35,7 +66,6 @@ export default function CreateFeedPage() {
 
     return (
         <main className='mx-auto min-h-screen max-w-6xl flex-1 p-6'>
-            {/* Back button */}
             <button
                 onClick={() => router.push('/amin/feed')}
                 className='mb-6 rounded-lg bg-green-600 px-4 py-2 text-white transition hover:bg-green-500'>
@@ -56,16 +86,34 @@ export default function CreateFeedPage() {
                     />
                 </label>
 
-                <label className='flex flex-col text-white'>
-                    Image URL (optional)
+                {/* Upload button + filename display */}
+                <div className='flex items-center gap-3'>
+                    <button
+                        type='button'
+                        onClick={handleFileClick}
+                        className='rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-500'>
+                        Upload Image
+                    </button>
+                    <span className='text-sm text-gray-300'>{file ? file.name : 'No file chosen'}</span>
+                    <input
+                        type='file'
+                        accept='image/*'
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        className='hidden'
+                    />
+                </div>
+
+                {/* <label className='flex flex-col text-white'>
+                    Folder Name (optional)
                     <input
                         type='text'
-                        value={imageUrl}
-                        onChange={(e) => setImageUrl(e.target.value)}
-                        placeholder='https://example.com/image.png'
+                        value={folderName}
+                        onChange={(e) => setFolderName(e.target.value)}
+                        placeholder='e.g. feed-posts'
                         className='mt-2 rounded-lg bg-gray-800 p-3 text-white focus:ring-2 focus:ring-green-500 focus:outline-none'
                     />
-                </label>
+                </label> */}
 
                 <label className='flex items-center gap-2 text-white'>
                     <input

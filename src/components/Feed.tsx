@@ -5,11 +5,14 @@ import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 
 import { useFeedFetch } from '@/hooks/usePaginatedFetch';
+import type { FeedImage } from '@/types/feed';
+import { AdvancedImage } from '@cloudinary/react';
+import type { CloudinaryImage } from '@cloudinary/url-gen';
 
 export interface FeedItem {
     _id: string;
     text: string;
-    imageUrl?: string;
+    imageUrl: FeedImage; // unified type
     hidden: boolean;
     createdAt: string;
 }
@@ -43,7 +46,12 @@ const Feed: React.FC<FeedProps> = ({ apiUrl, profileImage, authorName }) => {
         const containerWidth = container?.clientWidth ?? Math.min(window.innerWidth, 720);
 
         const img = new window.Image();
-        img.src = item.imageUrl;
+        img.src =
+            item.imageUrl?.type === 'cloudinary'
+                ? item.imageUrl.value.toURL()
+                : item.imageUrl?.type === 'url'
+                  ? item.imageUrl.value
+                  : '';
 
         await new Promise<void>((resolve) => {
             if (img.complete && img.naturalWidth) return resolve();
@@ -106,12 +114,19 @@ const Feed: React.FC<FeedProps> = ({ apiUrl, profileImage, authorName }) => {
                                             ? { height: `${expanded.height}px`, maxHeight: '80vh' }
                                             : undefined
                                     }>
-                                    <Image
-                                        src={item.imageUrl}
-                                        alt='post'
-                                        fill
-                                        className={`rounded-xl ${expanded._id === item._id ? 'object-contain' : 'object-cover'}`}
-                                    />
+                                    {item.imageUrl.type === 'cloudinary' ? (
+                                        <AdvancedImage
+                                            cldImg={item.imageUrl.value as CloudinaryImage}
+                                            className='absolute inset-0 h-full w-full object-cover'
+                                        />
+                                    ) : item.imageUrl.type === 'url' ? (
+                                        <Image
+                                            src={item.imageUrl.value}
+                                            alt='Post image'
+                                            fill
+                                            className='object-cover'
+                                        />
+                                    ) : null}
                                 </div>
 
                                 <p className='mt-1 text-center text-xs text-gray-500'>
