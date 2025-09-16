@@ -34,17 +34,23 @@ export default function CreateFeedPage() {
             if (file) {
                 const formData = new FormData();
                 formData.append('file', file);
-                formData.append('folderName', folderName);
 
-                const uploadRes = await fetch('/api/file/upload', {
-                    method: 'POST',
-                    body: formData
-                });
+                formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
+
+                formData.append('folder', 'feed');
+
+                const uploadRes = await fetch(
+                    `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUD_NAME}/image/upload`,
+                    {
+                        method: 'POST',
+                        body: formData
+                    }
+                );
 
                 if (!uploadRes.ok) throw new Error('Failed to upload image');
 
-                const { url } = await uploadRes.json();
-                imageUrl = url;
+                const data = await uploadRes.json();
+                imageUrl = data.secure_url;
             }
 
             const res = await fetch('/api/feed/new', {
