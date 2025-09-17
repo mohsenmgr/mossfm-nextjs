@@ -3,7 +3,20 @@
 import Link from 'next/link';
 
 import { signOut } from 'next-auth/react';
-import { FaBriefcase, FaEnvelope, FaFileUpload, FaQuoteLeft, FaRss, FaSignOutAlt, FaUser } from 'react-icons/fa';
+import {
+    FaBlogger,
+    FaBook,
+    FaBriefcase,
+    FaEnvelope,
+    FaFileUpload,
+    FaFilm,
+    FaInstagram,
+    FaMusic,
+    FaQuoteLeft,
+    FaRss,
+    FaSignOutAlt,
+    FaUser
+} from 'react-icons/fa';
 import { FaNoteSticky } from 'react-icons/fa6';
 
 export default function DashboardClient({ session }: { session: any }) {
@@ -16,7 +29,12 @@ export default function DashboardClient({ session }: { session: any }) {
         { title: 'Feed', icon: <FaRss />, href: '/amin/feed', query: { admin: true } },
         { title: 'Upload CV', icon: <FaFileUpload />, href: '/amin/cv', query: '' },
         { title: 'Messages', icon: <FaEnvelope />, href: '/amin/messages', query: '' },
-        { title: 'Prompts', icon: <FaNoteSticky />, href: '/amin/prompts', query: '' }
+        { title: 'Prompts', icon: <FaNoteSticky />, href: '/amin/prompts', query: '' },
+        { title: 'Blog', icon: <FaBlogger />, href: '/amin/blog', query: '' },
+        { title: 'Social', icon: <FaInstagram />, href: '/amin/social', query: '' },
+        { title: 'Books', icon: <FaBook />, href: '/amin/books', query: '' },
+        { title: 'Music', icon: <FaMusic />, href: '/amin/music', query: '' },
+        { title: 'Movies', icon: <FaFilm />, href: '/amin/movies', query: '' }
     ];
 
     return (
