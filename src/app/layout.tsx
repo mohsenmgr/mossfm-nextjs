@@ -10,6 +10,7 @@ import Footer from '@/components/Footer';
 import Nav from '@/components/Nav';
 import Provider from '@/components/Provider';
 import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 // Google Font via next/font
 const exo = Exo({
@@ -36,6 +37,7 @@ const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
                         <Nav />
                         <ThemeProvider attribute='class' defaultTheme='dark'>
                             <Suspense> {children}</Suspense>
+                            <SpeedInsights />
                         </ThemeProvider>
                         <Footer />
                     </main>
