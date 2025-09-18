@@ -2,11 +2,13 @@ import { type ReactNode, Suspense } from 'react';
 
 import type { Metadata } from 'next';
 import { Exo } from 'next/font/google';
+import Script from 'next/script';
 
 import { ThemeProvider } from 'next-themes';
 
 import '@/app/globals.css';
 import Footer from '@/components/Footer';
+import GoogAnalytics from '@/components/GoogleAnalytics';
 import Nav from '@/components/Nav';
 import Provider from '@/components/Provider';
 import { Analytics } from '@vercel/analytics/next';
@@ -47,7 +49,10 @@ export const metadata: Metadata = {
         creator: '@mossfm'
     },
     alternates: {
-        canonical: 'https://www.mossfm.it'
+        canonical: 'https://mossfm.it'
+    },
+    verification: {
+        google: 'T4SHpHFktfC_GHt5SFNbeobNC9RwM-RBv04fzW5YUZQ'
     }
 };
 
@@ -71,7 +76,19 @@ const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
                     </main>
                 </Provider>
                 <Analytics />
+                <GoogAnalytics gaId='G-X5SC12G7F5' />
             </body>
+            <Script
+                type='application/ld+json'
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        '@context': 'https://schema.org',
+                        '@type': 'Software Engineer',
+                        name: 'MossFM',
+                        url: 'https://mossfm.it'
+                    })
+                }}
+            />
         </html>
     );
 };
