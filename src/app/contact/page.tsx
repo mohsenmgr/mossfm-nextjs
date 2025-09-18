@@ -1,10 +1,26 @@
+import React from 'react';
+
+import { Metadata } from 'next';
+
 import ContactForm from '@/components/ContactForm';
-import React from 'react'
+
+export async function generateMetadata(): Promise<Metadata> {
+    const baseUrl = 'https://mossfm.it';
+
+    return {
+        title: 'Contact Me',
+        description: 'Contact Form MossFM – Software Engineer, developer, and creator of modern digital solutions.',
+        alternates: {
+            canonical: `${baseUrl}/contact`
+        },
+        openGraph: {
+            url: `${baseUrl}/contact`
+        }
+    };
+}
 
 function ContactPage() {
-  return (
-    <ContactForm />
-  )
+    return <ContactForm />;
 }
 
 export default ContactPage;

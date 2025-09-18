@@ -119,7 +119,7 @@ export default function Main() {
                 <div className='pointer-events-none flex w-1/4 items-start justify-center bg-transparent max-[768px]:hidden max-[768px]:w-[22%]'>
                     <Image
                         src='/pers.svg'
-                        alt='Left Pillar'
+                        alt='Decorative Pillar on MossFM layout'
                         width={150}
                         height={150}
                         className='pillar block h-full w-full object-cover'
@@ -165,7 +165,7 @@ export default function Main() {
                         width={150}
                         height={150}
                         src='/pers.svg'
-                        alt='Right Pillar'
+                        alt='Decorative Pillar on MossFM layout'
                         className='block h-full w-full scale-x-[-1] object-cover'
                     />
                 </div>

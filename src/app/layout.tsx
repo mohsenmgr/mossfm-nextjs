@@ -40,6 +40,12 @@ export const metadata: Metadata = {
                 width: 16,
                 height: 16,
                 alt: 'MossFM logo'
+            },
+            {
+                url: 'https://www.mossfm.it/og-image.png',
+                width: 1200,
+                height: 630,
+                alt: 'MossFM preview image'
             }
         ]
     },

@@ -138,7 +138,12 @@ export default function FeedAdminPage() {
                                         className='absolute inset-0 h-full w-full object-cover'
                                     />
                                 ) : (
-                                    <Image src={post.imageUrl.value} alt='Post image' fill className='object-cover' />
+                                    <Image
+                                        src={post.imageUrl.value}
+                                        alt='Feed Update MossFM'
+                                        fill
+                                        className='object-cover'
+                                    />
                                 )}
                             </div>
                         )}

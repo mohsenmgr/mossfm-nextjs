@@ -6,7 +6,7 @@ export async function generateMetadata(): Promise<Metadata> {
     const baseUrl = 'https://mossfm.it';
 
     return {
-        title: 'Home',
+        title: 'Home | MossFM',
         description:
             'Welcome to MossFM – Discover More about MossFM | AI Engineer | Software Engineer | Contact | previous jobs | About Me',
         alternates: {

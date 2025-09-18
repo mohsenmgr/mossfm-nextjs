@@ -1,6 +1,21 @@
-'use client';
+import { Metadata } from 'next';
 
 import Feed from '@/components/Feed';
+
+export async function generateMetadata(): Promise<Metadata> {
+    const baseUrl = 'https://mossfm.it';
+
+    return {
+        title: 'Feed Updates',
+        description: 'Feed Updates MossFM – Software Engineer, developer, and creator of modern digital solutions.',
+        alternates: {
+            canonical: `${baseUrl}/feed`
+        },
+        openGraph: {
+            url: `${baseUrl}/feed`
+        }
+    };
+}
 
 export default function Page() {
     return (
@@ -8,7 +23,7 @@ export default function Page() {
             <Feed
                 apiUrl='/api/feed?public=true' // feed endpoint with public=true to hide hidden posts
                 profileImage='/images/mohsen.png'
-                authorName='Mohsen FM'
+                authorName='MossFM profile pic'
             />
         </div>
     );
