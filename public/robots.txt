@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.mossfm.it
+
+# Sitemaps
+Sitemap: https://www.mossfm.it/sitemap.xml

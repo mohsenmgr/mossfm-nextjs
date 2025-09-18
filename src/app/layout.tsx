@@ -19,8 +19,36 @@ const exo = Exo({
 });
 
 export const metadata: Metadata = {
-    title: 'Moss FM',
-    description: 'Moss FM portfolio | Software Engineer'
+    title: {
+        default:
+            'Moss FM portfolio | Software Engineer | Full stack developer | AI Engineer | Latest updates | Discover collaboration opportunities',
+        template: '%s | MossFM'
+    },
+    description: 'Discover latest news, updates, and get in touch with MossFM.',
+    keywords: ['software engineer', 'ai', 'portfolio', 'career', 'linkedin', 'indeed', 'italy', 'MossFM'],
+    openGraph: {
+        type: 'website',
+        url: 'https://www.mossfm.it',
+        title: 'MossFM – Software Engineer',
+        description: 'Engineer, passionate developer, writer and traveller.',
+        siteName: 'MossFM',
+        images: [
+            {
+                url: 'https://www.mossfm.it/favicon.ico',
+                width: 16,
+                height: 16,
+                alt: 'MossFM logo'
+            }
+        ]
+    },
+    twitter: {
+        card: 'summary_large_image',
+        site: '@mossfm',
+        creator: '@mossfm'
+    },
+    alternates: {
+        canonical: 'https://www.mossfm.it'
+    }
 };
 
 const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
