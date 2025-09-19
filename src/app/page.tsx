@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import Main from '@/components/Main';
 
 export async function generateMetadata(): Promise<Metadata> {
-    const baseUrl = 'https://mossfm.it';
+    const baseUrl = 'https://www.mossfm.it';
 
     return {
         title: 'Home | MossFM',

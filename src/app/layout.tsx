@@ -55,7 +55,7 @@ export const metadata: Metadata = {
         creator: '@mossfm'
     },
     alternates: {
-        canonical: 'https://mossfm.it'
+        canonical: 'https://www.mossfm.it'
     },
     verification: {
         google: 'T4SHpHFktfC_GHt5SFNbeobNC9RwM-RBv04fzW5YUZQ'

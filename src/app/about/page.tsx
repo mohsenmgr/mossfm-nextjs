@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 import AboutMe from '@/components/AboutMe';
 
 export async function generateMetadata(): Promise<Metadata> {
-    const baseUrl = 'https://mossfm.it';
+    const baseUrl = 'https://www.mossfm.it';
 
     return {
         title: 'About Me',

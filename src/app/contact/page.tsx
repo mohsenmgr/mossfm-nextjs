@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 import ContactForm from '@/components/ContactForm';
 
 export async function generateMetadata(): Promise<Metadata> {
-    const baseUrl = 'https://mossfm.it';
+    const baseUrl = 'https://www.mossfm.it';
 
     return {
         title: 'Contact Me',
