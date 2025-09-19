@@ -54,7 +54,7 @@ const AboutMe: FC = () => {
                     />
                 </div>
 
-                <h2 className='text-center text-4xl font-extrabold text-green-200'>About Me</h2>
+                <h1 className='text-center text-4xl font-extrabold text-green-200'>About Me</h1>
             </div>
 
             <div className='mt-6 space-y-6'>
