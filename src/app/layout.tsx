@@ -26,23 +26,24 @@ export const metadata: Metadata = {
             'Moss FM portfolio | Software Engineer | Full stack developer | AI Engineer | Latest updates | Discover collaboration opportunities',
         template: '%s | MossFM'
     },
+    authors: { url: process.env.NEXT_PUBLIC_DOMAIN_NAME, name: 'mossfm' },
     description: 'Discover latest news, updates, and get in touch with MossFM.',
     keywords: ['software engineer', 'ai', 'portfolio', 'career', 'linkedin', 'indeed', 'italy', 'MossFM'],
     openGraph: {
         type: 'website',
-        url: 'https://www.mossfm.it',
+        url: process.env.NEXT_PUBLIC_DOMAIN_NAME,
         title: 'MossFM – Software Engineer',
         description: 'Engineer, passionate developer, writer and traveller.',
         siteName: 'MossFM',
         images: [
             {
-                url: 'https://www.mossfm.it/favicon.ico',
+                url: `${process.env.NEXT_PUBLIC_DOMAIN_NAME}/favicon.ico`,
                 width: 16,
                 height: 16,
                 alt: 'MossFM logo'
             },
             {
-                url: 'https://www.mossfm.it/og-image.png',
+                url: `${process.env.NEXT_PUBLIC_DOMAIN_NAME}/og-image.png`,
                 width: 1200,
                 height: 630,
                 alt: 'MossFM preview image'
@@ -55,10 +56,10 @@ export const metadata: Metadata = {
         creator: '@mossfm'
     },
     alternates: {
-        canonical: 'https://www.mossfm.it'
+        canonical: process.env.NEXT_PUBLIC_DOMAIN_NAME
     },
     verification: {
-        google: 'T4SHpHFktfC_GHt5SFNbeobNC9RwM-RBv04fzW5YUZQ'
+        google: `${process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION}`
     }
 };
 
@@ -82,16 +83,18 @@ const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
                     </main>
                 </Provider>
                 <Analytics />
-                <GoogAnalytics gaId='G-X5SC12G7F5' />
+                <GoogAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICSID!} />
             </body>
             <Script
+                id='ld-json-software-engineer'
                 type='application/ld+json'
                 dangerouslySetInnerHTML={{
                     __html: JSON.stringify({
                         '@context': 'https://schema.org',
-                        '@type': 'Software Engineer',
+                        '@type': 'Person',
                         name: 'MossFM',
-                        url: 'https://mossfm.it'
+                        url: process.env.NEXT_PUBLIC_DOMAIN_NAME,
+                        jobTitle: 'Software Engineer'
                     })
                 }}
             />

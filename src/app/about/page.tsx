@@ -1,11 +1,14 @@
 import React from 'react';
 
 import { Metadata } from 'next';
+import Head from 'next/head';
 
 import AboutMe from '@/components/AboutMe';
+import { getLastUpdate } from '@/lib/lastUpdate';
+import About from '@/models/About';
 
 export async function generateMetadata(): Promise<Metadata> {
-    const baseUrl = 'https://www.mossfm.it';
+    const baseUrl = process.env.NEXT_PUBLIC_DOMAIN_NAME;
 
     return {
         title: 'About Me',
@@ -14,17 +17,25 @@ export async function generateMetadata(): Promise<Metadata> {
             canonical: `${baseUrl}/about`
         },
         openGraph: {
-            url: `${baseUrl}/about`
+            type: 'article',
+            url: `${baseUrl}/about`,
+            authors: ['MossFM']
         }
     };
 }
 
-function AboutPage() {
+export default async function AboutPage() {
+    let lastUpdated = null;
+
+    const res = await getLastUpdate(About);
+    if (!res.error) {
+        lastUpdated = new Date(res.updatedAt).toISOString();
+    }
+
     return (
         <section className='mx-auto max-w-5xl bg-none px-6 py-8 text-gray-100'>
+            <Head>{lastUpdated && <meta name='last-modified' content={lastUpdated} />}</Head>
             <AboutMe />
         </section>
     );
 }
-
-export default AboutPage;

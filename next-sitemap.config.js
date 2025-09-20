@@ -1,4 +1,4 @@
 module.exports = {
-    siteUrl: 'https://www.mossfm.it',
+    siteUrl: process.env.NEXT_PUBLIC_DOMAIN_NAME,
     generateRobotsTxt: true
 };

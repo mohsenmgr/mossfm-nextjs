@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 import Jobs from '@/components/Jobs';
 
 export async function generateMetadata(): Promise<Metadata> {
-    const baseUrl = 'https://www.mossfm.it';
+    const baseUrl = process.env.NEXT_PUBLIC_DOMAIN_NAME;
 
     return {
         title: 'Previous work',
