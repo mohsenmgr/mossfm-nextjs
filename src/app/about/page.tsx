@@ -10,6 +10,13 @@ import About from '@/models/About';
 export async function generateMetadata(): Promise<Metadata> {
     const baseUrl = process.env.NEXT_PUBLIC_DOMAIN_NAME;
 
+    let lastUpdated = null;
+
+    const res = await getLastUpdate(About);
+    if (!res.error) {
+        lastUpdated = new Date(res.updatedAt).toISOString();
+    }
+
     return {
         title: 'About Me',
         description: 'Learn more about MossFM – Software Engineer, developer, and creator of modern digital solutions.',
@@ -20,21 +27,14 @@ export async function generateMetadata(): Promise<Metadata> {
             type: 'article',
             url: `${baseUrl}/about`,
             authors: ['MossFM']
-        }
+        },
+        ...(lastUpdated && { other: { 'last-modified': lastUpdated } })
     };
 }
 
-export default async function AboutPage() {
-    let lastUpdated = null;
-
-    const res = await getLastUpdate(About);
-    if (!res.error) {
-        lastUpdated = new Date(res.updatedAt).toISOString();
-    }
-
+export default function AboutPage() {
     return (
         <section className='mx-auto max-w-5xl bg-none px-6 py-8 text-gray-100'>
-            <Head>{lastUpdated && <meta name='last-modified' content={lastUpdated} />}</Head>
             <AboutMe />
         </section>
     );

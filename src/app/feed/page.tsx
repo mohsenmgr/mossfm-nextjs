@@ -32,7 +32,8 @@ export async function generateMetadata(): Promise<Metadata> {
                     alt: 'Feed preview image'
                 }
             ]
-        }
+        },
+        ...(lastUpdated && { other: { 'last-modified': lastUpdated } })
     };
 }
 
