@@ -16,7 +16,7 @@ const delayErasing_text = 150;
 const delayTyping_text = 3000;
 
 export default function Main() {
-    const [jobs, setJobs] = useState<IJob[]>([]);
+    const [jobs, setJobs] = useState([]);
     const [quote, setQuote] = useState<Partial<IQuote>>({ quotes: [], special: '', showSpecial: false });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string>('');
@@ -34,7 +34,7 @@ export default function Main() {
                 // Fetch jobs
                 const resJobs = await fetch('/api/job');
                 if (!resJobs.ok) throw new Error('Failed to fetch jobs');
-                const dataJobs: IJob[] = await resJobs.json();
+                const dataJobs = await resJobs.json();
                 setJobs(dataJobs);
             } catch (err: any) {
                 setError(err.message || 'Something went wrong');
@@ -118,6 +118,7 @@ export default function Main() {
             <div className='flex flex-1'>
                 <div className='pointer-events-none flex w-1/4 items-start justify-center bg-transparent max-[768px]:hidden max-[768px]:w-[22%]'>
                     <Image
+                        priority
                         src='/pers.svg'
                         alt='Decorative Pillar on MossFM layout'
                         width={150}
@@ -131,7 +132,7 @@ export default function Main() {
                         <Image
                             width={300}
                             height={300}
-                            src='/images/farvahar.png'
+                            src='/images/farvahar.svg'
                             alt='Farvahar'
                             className='h-auto max-w-full'
                         />
@@ -149,9 +150,11 @@ export default function Main() {
                         </section>
 
                         <section>
-                            {loading
-                                ? Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} />)
-                                : jobs.map((job) => <MultiTab key={job._id as string} job={job} />)}
+                            {loading ? (
+                                Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} />)
+                            ) : (
+                                <MultiTab initialJobs={jobs} />
+                            )}
                         </section>
 
                         <section className='bg-none text-gray-100'>
@@ -162,6 +165,7 @@ export default function Main() {
 
                 <div className='pointer-events-none flex w-1/4 items-start justify-center bg-transparent max-[768px]:hidden max-[768px]:w-[22%]'>
                     <Image
+                        priority
                         width={150}
                         height={150}
                         src='/pers.svg'

@@ -7,7 +7,7 @@ import Skeleton from '@/components/Skeleton';
 import { IJob } from '@/models/Job';
 
 function Jobs() {
-    const [jobs, setJobs] = useState<IJob[]>([]);
+    const [jobs, setJobs] = useState<[]>([]);
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState(true);
 
@@ -16,8 +16,9 @@ function Jobs() {
             try {
                 const res = await fetch('/api/job'); // your GET API route
                 if (!res.ok) throw new Error('Failed to fetch jobs');
-                const data: IJob[] = await res.json();
+                const data = await res.json();
                 setJobs(data);
+                console.log(data);
             } catch (err: any) {
                 setError(err.message || 'Something went wrong');
             } finally {
@@ -32,11 +33,15 @@ function Jobs() {
         <div className='flex min-h-screen flex-col'>
             <div className='flex flex-1'>
                 <main className='mx-auto min-h-[1300px] max-w-4xl flex-1 pt-8'>
+                    <h1 className='mb-6 text-3xl font-bold text-white'>Previous work</h1>
+
                     <div className='space-y-8'>
                         <section>
-                            {loading
-                                ? Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} />)
-                                : jobs.map((job) => <MultiTab key={job._id as string} job={job} />)}
+                            {loading ? (
+                                Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} />)
+                            ) : (
+                                <MultiTab initialJobs={jobs} />
+                            )}
                         </section>
                     </div>
                 </main>

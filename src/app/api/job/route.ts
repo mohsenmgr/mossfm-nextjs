@@ -1,24 +1,36 @@
-import connectToDB from '@/lib/mongoose';
-
 // app/api/jobs/route.ts
-import { NextRequest, NextResponse } from "next/server";
-import Job from "@/models/Job";
+import { NextRequest, NextResponse } from 'next/server';
+
+import connectToDB from '@/lib/mongoose';
+import Job from '@/models/Job';
 
 export const GET = async (req: NextRequest) => {
-  try {
-    // Connect to MongoDB
-    await connectToDB();
+    try {
+        let jobs = null;
 
-    // Fetch all jobs from the database
-    const jobs = await Job.find({}).sort({ dateStart: -1 });
+        // Connect to MongoDB
+        await connectToDB();
 
-    // Return JSON response
-    return NextResponse.json(jobs, { status: 200 });
-  } catch (error) {
-    console.error("Failed to fetch jobs:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch jobs" },
-      { status: 500 }
-    );
-  }
+        const url = new URL(req.url);
+        const page = Number(url.searchParams.get('page') || 1);
+        const limit = Number(url.searchParams.get('limit') || 2);
+
+        const admin = url.searchParams.get('admin') === 'true';
+
+        if (!admin) {
+            jobs = await Job.find({})
+                .sort({ dateStart: -1 })
+                .skip((page - 1) * limit)
+                .limit(limit);
+        } else {
+            // Fetch all jobs from the database
+            jobs = await Job.find({}).sort({ dateStart: -1 });
+        }
+
+        // Return JSON response
+        return new Response(JSON.stringify(jobs));
+    } catch (error) {
+        console.error('Failed to fetch jobs:', error);
+        return NextResponse.json({ error: 'Failed to fetch jobs' }, { status: 500 });
+    }
 };
