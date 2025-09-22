@@ -2,7 +2,7 @@
 import { NextRequest } from 'next/server';
 
 import connectToDB from '@/lib/mongoose';
-import Prompt, { IPrompt } from '@/models/prompt';
+import Prompt from '@/models/prompt';
 
 export const POST = async (req: NextRequest) => {
     try {

@@ -58,7 +58,7 @@ export default function AdminJobPage() {
             <div className='mb-8 flex items-center justify-between'>
                 <h1 className='text-3xl font-bold text-gray-800 dark:text-gray-100'>Manage Jobs</h1>
                 <Link
-                    href='/amin/jobs/insert'
+                    href='/amin/jobs/new'
                     className='rounded-lg bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700'>
                     + New Job
                 </Link>
