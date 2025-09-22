@@ -101,7 +101,7 @@ export default function AdminJobPage() {
                         {/* Actions */}
                         <div className='flex items-center justify-between border-t border-gray-200 px-4 py-2 dark:border-gray-700'>
                             <button
-                                onClick={() => router.push(`/admin/job/edit/${job._id}`)}
+                                onClick={() => router.push(`/amin/jobs/edit/${job._id}`)}
                                 className='rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700'>
                                 Edit
                             </button>

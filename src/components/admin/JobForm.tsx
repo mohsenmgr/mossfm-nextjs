@@ -6,15 +6,27 @@ import Link from 'next/link';
 
 import type { JobInput, JobItem } from '@/types/JobData';
 
-type BaseFormProps<T extends JobInput | JobItem> = {
-    type: T extends JobInput ? 'Create' : 'Edit';
-    job: T;
-    setJob: React.Dispatch<React.SetStateAction<T>>;
+type CreateFormProps = {
+    type: 'Create';
+    job: JobInput;
+    setJob: React.Dispatch<React.SetStateAction<JobInput>>;
     submitting: boolean;
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     files: File[];
     setFiles: React.Dispatch<React.SetStateAction<File[]>>;
 };
+
+type EditFormProps = {
+    type: 'Edit';
+    job: JobItem;
+    setJob: React.Dispatch<React.SetStateAction<JobItem>>;
+    submitting: boolean;
+    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+    files: File[];
+    setFiles: React.Dispatch<React.SetStateAction<File[]>>;
+};
+
+type JobFormProps = CreateFormProps | EditFormProps;
 
 export default function JobForm<T extends JobInput | JobItem>({
     type,
@@ -24,14 +36,14 @@ export default function JobForm<T extends JobInput | JobItem>({
     handleSubmit,
     files,
     setFiles
-}: BaseFormProps<T>) {
+}: JobFormProps) {
     const [newResponsibility, setNewResponsibility] = useState('');
     const [newSkill, setNewSkill] = useState('');
 
     /* ---------------- Responsibilities ---------------- */
     const addResponsibility = () => {
         if (!newResponsibility.trim()) return;
-        setJob((prev) => ({
+        setJob((prev: any) => ({
             ...prev,
             responsibilities: {
                 ...prev.responsibilities,
@@ -42,11 +54,11 @@ export default function JobForm<T extends JobInput | JobItem>({
     };
 
     const removeResponsibility = (index: number) => {
-        setJob((prev) => ({
+        setJob((prev: any) => ({
             ...prev,
             responsibilities: {
                 ...prev.responsibilities,
-                items: prev.responsibilities.items.filter((_, i) => i !== index)
+                items: prev.responsibilities.items.filter((_: any, i: any) => i !== index)
             }
         }));
     };
@@ -54,14 +66,14 @@ export default function JobForm<T extends JobInput | JobItem>({
     const handleResponsibilityChange = (index: number, value: string) => {
         const newItems = [...job.responsibilities.items];
         newItems[index] = value;
-        setJob((prev) => ({
+        setJob((prev: any) => ({
             ...prev,
             responsibilities: { ...prev.responsibilities, items: newItems }
         }));
     };
 
     const handleResponsibilityTitleChange = (value: string) => {
-        setJob((prev) => ({
+        setJob((prev: any) => ({
             ...prev,
             responsibilities: { ...prev.responsibilities, title: value }
         }));
@@ -70,7 +82,7 @@ export default function JobForm<T extends JobInput | JobItem>({
     /* ---------------- Skills ---------------- */
     const addSkill = () => {
         if (!newSkill.trim()) return;
-        setJob((prev) => ({
+        setJob((prev: any) => ({
             ...prev,
             skills: [...prev.skills, newSkill.trim()]
         }));
@@ -78,16 +90,16 @@ export default function JobForm<T extends JobInput | JobItem>({
     };
 
     const removeSkill = (index: number) => {
-        setJob((prev) => ({
+        setJob((prev: any) => ({
             ...prev,
-            skills: prev.skills.filter((_, i) => i !== index)
+            skills: prev.skills.filter((_: any, i: any) => i !== index)
         }));
     };
 
     const handleSkillChange = (index: number, value: string) => {
         const newSkills = [...job.skills];
         newSkills[index] = value;
-        setJob((prev) => ({ ...prev, skills: newSkills }));
+        setJob((prev: any) => ({ ...prev, skills: newSkills }));
     };
 
     /* ---------------- Photos ---------------- */
@@ -119,7 +131,7 @@ export default function JobForm<T extends JobInput | JobItem>({
                             type='text'
                             required
                             value={job.title}
-                            onChange={(e) => setJob({ ...job, title: e.target.value })}
+                            onChange={(e) => setJob({ ...job, title: e.target.value } as any)}
                             placeholder='Job title'
                             className='w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-sm text-white placeholder-gray-400 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 focus:outline-none'
                         />
@@ -132,7 +144,7 @@ export default function JobForm<T extends JobInput | JobItem>({
                             <input
                                 type='date'
                                 value={job.dateStart}
-                                onChange={(e) => setJob({ ...job, dateStart: e.target.value })}
+                                onChange={(e) => setJob({ ...job, dateStart: e.target.value } as any)}
                                 className='rounded-lg border border-gray-700 px-3 py-2 text-sm text-gray-200 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 focus:outline-none'
                             />
                         </div>
@@ -141,7 +153,7 @@ export default function JobForm<T extends JobInput | JobItem>({
                             <input
                                 type='date'
                                 value={job.dateFinish}
-                                onChange={(e) => setJob({ ...job, dateFinish: e.target.value })}
+                                onChange={(e) => setJob({ ...job, dateFinish: e.target.value } as any)}
                                 className='rounded-lg border border-gray-700 px-3 py-2 text-sm text-gray-200 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 focus:outline-none'
                             />
                         </div>
@@ -154,7 +166,7 @@ export default function JobForm<T extends JobInput | JobItem>({
                             required
                             rows={6}
                             value={job.jobDescription}
-                            onChange={(e) => setJob({ ...job, jobDescription: e.target.value })}
+                            onChange={(e) => setJob({ ...job, jobDescription: e.target.value } as any)}
                             placeholder='Write your job description here...'
                             className='w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 text-sm text-white placeholder-gray-400 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 focus:outline-none'
                         />
@@ -256,7 +268,7 @@ export default function JobForm<T extends JobInput | JobItem>({
                             type='text'
                             required
                             value={job.location}
-                            onChange={(e) => setJob({ ...job, location: e.target.value })}
+                            onChange={(e) => setJob({ ...job, location: e.target.value } as any)}
                             placeholder='Location'
                             className='w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-sm text-white placeholder-gray-400 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 focus:outline-none'
                         />

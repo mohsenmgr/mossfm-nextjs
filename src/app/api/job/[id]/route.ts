@@ -4,6 +4,31 @@ import { NextRequest } from 'next/server';
 import connectToDB from '@/lib/mongoose';
 import Job from '@/models/Job';
 
+import { Types } from 'mongoose';
+
+export const GET = async (_req: NextRequest, { params }: { params: Promise<{ id: string }> }): Promise<Response> => {
+    try {
+        const { id } = await params;
+
+        if (!Types.ObjectId.isValid(id)) {
+            return new Response('Invalid ID format', { status: 400 });
+        }
+
+        await connectToDB();
+
+        const job = await Job.findById(id);
+
+        if (!job) {
+            return new Response('Job not found!', { status: 404 });
+        }
+
+        return new Response(JSON.stringify(job), { status: 200 });
+    } catch (error) {
+        console.error('GET error:', error);
+        return new Response('Failed to fetch job', { status: 500 });
+    }
+};
+
 export const PATCH = async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
     try {
         await connectToDB();
