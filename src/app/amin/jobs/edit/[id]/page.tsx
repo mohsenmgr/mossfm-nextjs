@@ -1,11 +1,13 @@
 import JobEditClient from '@/components/admin/JobEditClient';
 import { JobItem } from '@/types/JobData';
 
-interface Props {
-    params: Promise<{ id: string }>;
-}
+type paramsType = Promise<{ id: string }>;
 
-export default async function Page({ params }: Props) {
+type Props = {
+    params: paramsType;
+};
+
+const Page = async ({ params }: Props) => {
     const { id } = await params;
 
     // Fetch job data on the server
@@ -20,4 +22,6 @@ export default async function Page({ params }: Props) {
     const job: JobItem = await res.json();
 
     return <JobEditClient job={job} />;
-}
+};
+
+export default Page;
