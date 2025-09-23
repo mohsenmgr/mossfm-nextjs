@@ -12,8 +12,8 @@ interface Props {
     params: Promise<{ id: string }>;
 }
 
-export default function AdminJobEdit({ params }: Props) {
-    const { id } = useParams<{ id: string }>();
+export default async function AdminJobEdit({ params }: Props) {
+    const { id } = await params; // ✅ unwrap the promise
 
     const [files, setFiles] = useState<File[]>([]);
 
