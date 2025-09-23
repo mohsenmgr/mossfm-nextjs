@@ -9,7 +9,7 @@ import JobForm from '@/components/admin/JobForm';
 import { JobInput, JobItem } from '@/types/JobData';
 
 interface Props {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }
 
 export default function AdminJobEdit({ params }: Props) {
