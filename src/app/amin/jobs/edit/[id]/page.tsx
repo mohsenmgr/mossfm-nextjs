@@ -11,7 +11,9 @@ const Page = async ({ params }: Props) => {
     const { id } = await params;
 
     // Fetch job data on the server
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/job/${id}`, {
+
+    const res = await fetch(process.env.NEXT_PUBLIC_DOMAIN_NAME + `/api/job/${id}`, {
+        method: 'GET',
         cache: 'no-store'
     });
 
