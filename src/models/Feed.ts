@@ -9,6 +9,12 @@ export interface IFeed extends Document {
     updatedAt: Date;
 }
 
+export interface IError {
+    error: string;
+}
+
+export type FeedResponse = IFeed | IError;
+
 const FeedSchema = new Schema<IFeed>(
     {
         text: {

@@ -3,24 +3,31 @@ import { Metadata } from 'next';
 import Feed from '@/components/Feed';
 import { getLastUpdate } from '@/lib/lastUpdate';
 import FeedModel from '@/models/Feed';
+import type { IError, IFeed } from '@/models/Feed';
 
+type FeedResponse = IFeed | IError;
 // 👇 This re-runs page + metadata every 60s
 export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
     const baseUrl = process.env.NEXT_PUBLIC_DOMAIN_NAME;
-    let lastUpdated = null;
-    let imageUrl = null;
+    let lastUpdated = new Date().toISOString();
+    let imageUrl = `${baseUrl}/og-image.png`;
+    let title = 'MossFM';
 
-    const res = await getLastUpdate(FeedModel);
-    if (!res.error) {
+    const res: FeedResponse = await getLastUpdate(FeedModel);
+
+    if (!('error' in res) && !res.hidden) {
+        title = res.text;
         lastUpdated = new Date(res.updatedAt).toISOString();
-        imageUrl = res.imageUrl || `${baseUrl}/og-image.png`;
+        imageUrl = res.imageUrl || imageUrl;
+    } else if ('error' in res) {
+        console.log(res.error);
     }
 
     return {
         title: 'Feed Updates',
-        description: 'Feed Updates MossFM – Software Engineer, developer, and creator of modern digital solutions.',
+        description: `Feed Updates – ${title}`,
         alternates: {
             canonical: `${baseUrl}/feed`
         },
@@ -36,7 +43,9 @@ export async function generateMetadata(): Promise<Metadata> {
                 }
             ]
         },
-        ...(lastUpdated && { other: { 'last-modified': lastUpdated } })
+        other: {
+            'last-modified': lastUpdated
+        }
     };
 }
 
