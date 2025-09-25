@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
     if (!('error' in res) && !res.hidden) {
         title = res.text;
         lastUpdated = new Date(res.updatedAt).toISOString();
-        imageUrl = res.imageUrl || imageUrl;
+        imageUrl = res.imageUrl ? `${res.imageUrl}?v=${new Date(res.updatedAt).getTime()}` : imageUrl;
     } else if ('error' in res) {
         console.log(res.error);
     }
