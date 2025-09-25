@@ -41,7 +41,9 @@ export async function generateMetadata(): Promise<Metadata> {
                     height: 630,
                     alt: 'Feed preview image'
                 }
-            ]
+            ],
+            locale: 'en',
+            siteName: 'MossFM'
         },
         other: {
             'last-modified': lastUpdated
