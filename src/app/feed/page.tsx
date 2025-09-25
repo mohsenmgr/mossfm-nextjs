@@ -4,6 +4,9 @@ import Feed from '@/components/Feed';
 import { getLastUpdate } from '@/lib/lastUpdate';
 import FeedModel from '@/models/Feed';
 
+// 👇 This re-runs page + metadata every 60s
+export const revalidate = 3600;
+
 export async function generateMetadata(): Promise<Metadata> {
     const baseUrl = process.env.NEXT_PUBLIC_DOMAIN_NAME;
     let lastUpdated = null;
@@ -40,11 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Page() {
     return (
         <div className='min-h-screen bg-gray-100 p-6 dark:bg-gray-950'>
-            <Feed
-                apiUrl='/api/feed?public=true' // feed endpoint with public=true to hide hidden posts
-                profileImage='/images/mohsen.png'
-                authorName='MossFM profile pic'
-            />
+            <Feed apiUrl='/api/feed?public=true' profileImage='/images/mohsen.png' authorName='MossFM profile pic' />
         </div>
     );
 }
