@@ -55,6 +55,11 @@ export default function AdminJobPage() {
     return (
         <div className='p-8'>
             {/* Header with Insert button */}
+            <button
+                onClick={() => router.push('/amin/dashboard')}
+                className='mb-6 rounded-lg bg-green-600 px-4 py-2 text-white transition hover:bg-green-500'>
+                ← Back to Dashboard
+            </button>
             <div className='mb-8 flex items-center justify-between'>
                 <h1 className='text-3xl font-bold text-gray-800 dark:text-gray-100'>Manage Jobs</h1>
                 <Link

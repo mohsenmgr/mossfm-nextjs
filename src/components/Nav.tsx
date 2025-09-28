@@ -46,6 +46,16 @@ function Nav() {
                         </Link>
                     </li>
                     <li>
+                        <Link href='/blog' className='transition-colors duration-300 ease-in-out hover:text-green-200'>
+                            Blog
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href='/feed' className='transition-colors duration-300 ease-in-out hover:text-green-200'>
+                            Feed
+                        </Link>
+                    </li>
+                    <li>
                         <Link href='/about' className='transition-colors duration-300 ease-in-out hover:text-green-200'>
                             About
                         </Link>
@@ -86,6 +96,22 @@ function Nav() {
                             className='transition-colors duration-300 ease-in-out hover:text-green-500'
                             onClick={() => setIsOpen(false)}>
                             Home
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            href='/blog'
+                            className='transition-colors duration-300 ease-in-out hover:text-green-500'
+                            onClick={() => setIsOpen(false)}>
+                            Blog
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            href='/feed'
+                            className='transition-colors duration-300 ease-in-out hover:text-green-500'
+                            onClick={() => setIsOpen(false)}>
+                            Feed
                         </Link>
                     </li>
                     <li>
