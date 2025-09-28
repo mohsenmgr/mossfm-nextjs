@@ -5,12 +5,18 @@ import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+type paramsType = Promise<{ id: string }>;
+
+type Props = {
+    params: paramsType;
+};
+
 async function getPost(id: string) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_NAME}/api/blog/${id}`, { cache: 'no-store' });
     return res.json();
 }
 
-export default async function BlogPostPage({ params }: { params: { id: string } }) {
+export default async function BlogPostPage({ params }: Props) {
     const { id } = await params; // keeping your destructuring exactly
     let post = null;
     try {
