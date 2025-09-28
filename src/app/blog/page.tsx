@@ -1,6 +1,15 @@
-import React from 'react';
-
+import { Metadata } from 'next';
 import Link from 'next/link';
+
+import BlogGrid from '@/components/BlogClient';
+import { getLastUpdate } from '@/lib/lastUpdate';
+import BlogPostModel from '@/models/BlogPost';
+import { IBlogPost } from '@/models/BlogPost';
+import { IError } from '@/models/Feed';
+
+type BlogResponse = IBlogPost | IError;
+
+export const revalidate = 3600;
 
 async function getPosts() {
     const res = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_NAME}/api/blog`, { cache: 'no-store' });
@@ -8,49 +17,92 @@ async function getPosts() {
     return res.json();
 }
 
-// Helper to create a short excerpt from Markdown
-function getExcerpt(content: string, length: number = 150) {
-    const plain = content.replace(/[#_*~`>-]/g, ''); // simple Markdown cleanup
-    return plain.length > length ? plain.slice(0, length) + '...' : plain;
+export async function generateMetadata(): Promise<Metadata> {
+    const baseUrl = process.env.NEXT_PUBLIC_DOMAIN_NAME!;
+    let lastUpdated = new Date().toISOString();
+    let imageUrl = `${baseUrl}/og-image.png`;
+    let latestTitle = 'MossFM';
+
+    const res: BlogResponse = await getLastUpdate(BlogPostModel);
+
+    if (!('error' in res)) {
+        latestTitle = res.title;
+        lastUpdated = new Date(res.date).toISOString();
+        imageUrl = res.photos?.length > 0 ? res.photos[0] : `${baseUrl}/og-image.png`;
+    } else {
+        console.error(res.error);
+    }
+
+    return {
+        metadataBase: new URL(baseUrl),
+        title: `Blog – Latest: ${latestTitle}`,
+        description: `Catch up on the latest updates from MossFM. Most recent: ${latestTitle}`,
+        alternates: {
+            canonical: '/blog'
+        },
+        openGraph: {
+            url: '/blog',
+            type: 'website',
+            images: [
+                {
+                    url: imageUrl,
+                    width: 1200,
+                    height: 630,
+                    alt: 'Blog preview image'
+                }
+            ],
+            locale: 'en_US',
+            siteName: 'MossFM',
+            title: `Blog – Latest: ${latestTitle}`,
+            description: `Catch up on the latest updates from MossFM. Most recent: ${latestTitle}`
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: `Blog – Latest: ${latestTitle}`,
+            description: `Catch up on the latest updates from MossFM. Most recent: ${latestTitle}`,
+            images: [imageUrl]
+        },
+        other: {
+            'last-modified': lastUpdated
+        }
+    };
 }
 
 export default async function BlogListingPage() {
-    const posts = await getPosts();
+    const posts: IBlogPost[] = await getPosts();
+    const baseUrl = process.env.NEXT_PUBLIC_DOMAIN_NAME!;
+
+    // Build JSON-LD structured data
+    const blogStructuredData = {
+        '@context': 'https://schema.org',
+        '@type': 'Blog',
+        url: `${baseUrl}/blog`,
+        name: 'MossFM Blog',
+        description: 'Latest posts and updates from MossFM',
+        blogPost: posts.map((post) => ({
+            '@type': 'BlogPosting',
+            headline: post.title,
+            datePublished: post.date,
+            author: {
+                '@type': 'Person',
+                name: post.author
+            },
+            image: post.photos?.[0] || `${baseUrl}/og-image.png`,
+            url: `${baseUrl}/blog/${post._id}`
+        }))
+    };
 
     return (
         <section className='mx-auto max-w-6xl p-6'>
             <h1 className='mb-8 text-3xl font-bold'>Blog</h1>
 
-            <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
-                {posts.map((post: any) => (
-                    <div
-                        key={post._id}
-                        className='flex flex-col rounded-2xl bg-gray-900 p-6 shadow-lg transition hover:shadow-xl dark:bg-gray-800'>
-                        {/* Thumbnail */}
-                        {post.photos?.length > 0 && (
-                            <img
-                                src={post.photos[0]}
-                                alt={`Thumbnail for ${post.title}`}
-                                className='mb-4 h-48 w-full rounded-xl object-cover'
-                            />
-                        )}
+            {/* Inject JSON-LD structured data */}
+            <script
+                type='application/ld+json'
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(blogStructuredData) }}
+            />
 
-                        {/* Title & Date */}
-                        <h2 className='mb-1 text-xl font-semibold text-white'>{post.title}</h2>
-                        <p className='mb-4 text-sm text-gray-400'>{new Date(post.date).toLocaleDateString()}</p>
-
-                        {/* Excerpt */}
-                        <p className='mb-4 text-gray-300'>{getExcerpt(post.content)}</p>
-
-                        {/* Read More */}
-                        <Link
-                            href={`/blog/${post._id}`}
-                            className='mt-auto inline-block rounded bg-blue-600 px-4 py-2 text-center text-white hover:bg-blue-700'>
-                            Read More
-                        </Link>
-                    </div>
-                ))}
-            </div>
+            <BlogGrid posts={posts} />
         </section>
     );
 }
