@@ -42,8 +42,16 @@ export async function generateMetadata(): Promise<Metadata> {
                     alt: 'Feed preview image'
                 }
             ],
-            locale: 'en',
-            siteName: 'MossFM'
+            locale: 'en_US',
+            siteName: 'MossFM',
+            title: `Feed – Latest: ${title}`,
+            description: `Latest feed updates from MossFM. Most recent: ${title}`
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: `Blog – Latest: ${title}`,
+            description: `Catch up on the latest updates from MossFM. Most recent: ${title}`,
+            images: [imageUrl]
         },
         other: {
             'last-modified': lastUpdated
