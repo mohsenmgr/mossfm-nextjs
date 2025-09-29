@@ -38,14 +38,11 @@ export default function FeedAdminPage() {
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this post?')) return;
 
-        try {
-            const res = await fetch(`/api/feed/${id}`, { method: 'DELETE' });
-            if (res.ok) {
-                removeItem(id);
-            }
-        } catch (error) {
-            alert(`Delete request failed ${error}`);
-        }
+        const res = await fetch(`/api/feed/${id}`, { method: 'DELETE' });
+        console.log(res);
+        if (res.ok) {
+            removeItem(id);
+        } else alert(`Delete request failed code:${res.status} status:${res.statusText}`);
     };
 
     const toggleHidden = async (id: string, hidden: boolean) => {

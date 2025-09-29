@@ -1,12 +1,14 @@
 // app/api/prompt/new/route.ts
 import { NextRequest } from 'next/server';
 
+import checkAuthority from '@/lib/checkAuthority';
 import connectToDB from '@/lib/mongoose';
 import type { IMessagePayload } from '@/models/Message';
 import MessageArchive, { IMessageArchive } from '@/models/MessageArchive';
 
 export const POST = async (req: NextRequest) => {
     try {
+        await checkAuthority();
         await connectToDB();
 
         const body = (await req.json()) as IMessagePayload;

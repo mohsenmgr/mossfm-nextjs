@@ -1,13 +1,16 @@
 // app/api/prompts/route.ts
+import checkAuthority from '@/lib/checkAuthority';
 import connectToDB from '@/lib/mongoose';
 import Prompt from '@/models/prompt';
 
 export const GET = async () => {
-  try {
-    await connectToDB();
-    const prompts = await Prompt.find({}).populate('creator');
-    return new Response(JSON.stringify(prompts), { status: 200 });
-  } catch (err) {
-    return new Response('Failed to fetch prompts', { status: 500 });
-  }
+    try {
+        await checkAuthority();
+        await connectToDB();
+
+        const prompts = await Prompt.find({}).populate('creator');
+        return new Response(JSON.stringify(prompts), { status: 200 });
+    } catch (err) {
+        return new Response('Failed to fetch prompts', { status: 500 });
+    }
 };

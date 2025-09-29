@@ -1,11 +1,13 @@
 // app/api/jobs/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
+import checkAuthority from '@/lib/checkAuthority';
 import connectToDB from '@/lib/mongoose';
 import BlogPost from '@/models/BlogPost';
 
 export const POST = async (req: NextRequest) => {
     try {
+        await checkAuthority();
         // Connect to MongoDB
         await connectToDB();
         const { title, content, photos } = await req.json();

@@ -1,11 +1,13 @@
 // app/api/jobs/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
+import checkAuthority from '@/lib/checkAuthority';
 import connectToDB from '@/lib/mongoose';
 import AboutMe from '@/models/About';
 
 export const PATCH = async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
     try {
+        await checkAuthority();
         await connectToDB();
         const payload = await req.json();
         const { id } = await params;

@@ -1,11 +1,13 @@
 // app/api/feed/new/route.ts
 import { NextRequest } from 'next/server';
 
+import checkAuthority from '@/lib/checkAuthority';
 import connectToDB from '@/lib/mongoose';
 import Feed from '@/models/Feed';
 
 export const POST = async (req: NextRequest) => {
     try {
+        await checkAuthority();
         await connectToDB();
         const body = await req.json();
 

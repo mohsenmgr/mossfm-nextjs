@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 
+import checkAuthority from '@/lib/checkAuthority';
 import connectToDB from '@/lib/mongoose';
 import Message from '@/models/Message';
 
@@ -8,6 +9,8 @@ import { Types } from 'mongoose';
 // GET (read)
 export const GET = async (_req: NextRequest, { params }: { params: Promise<{ id: string }> }): Promise<Response> => {
     try {
+        await checkAuthority();
+
         const { id } = await params;
 
         if (!Types.ObjectId.isValid(id)) {
@@ -32,6 +35,8 @@ export const GET = async (_req: NextRequest, { params }: { params: Promise<{ id:
 // DELETE (delete)
 export const DELETE = async (_req: NextRequest, { params }: { params: Promise<{ id: string }> }): Promise<Response> => {
     try {
+        await checkAuthority();
+
         const { id } = await params;
 
         if (!Types.ObjectId.isValid(id)) {

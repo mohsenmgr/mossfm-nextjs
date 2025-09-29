@@ -20,8 +20,6 @@ import {
 import { FaNoteSticky } from 'react-icons/fa6';
 
 export default function DashboardClient({ session }: { session: any }) {
-    const lastOrder = 10;
-
     const cards = [
         { title: 'About Me', icon: <FaUser />, href: '/amin/about', query: '' },
         { title: 'Jobs', icon: <FaBriefcase />, href: '/amin/jobs', query: '' },

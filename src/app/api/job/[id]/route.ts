@@ -1,6 +1,7 @@
 // app/api/job/[id]/route.ts
 import { NextRequest } from 'next/server';
 
+import checkAuthority from '@/lib/checkAuthority';
 import connectToDB from '@/lib/mongoose';
 import Job from '@/models/Job';
 
@@ -31,6 +32,7 @@ export const GET = async (_req: NextRequest, { params }: { params: Promise<{ id:
 
 export const PATCH = async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
     try {
+        await checkAuthority();
         await connectToDB();
         const body = await req.json();
 
@@ -49,6 +51,7 @@ export const PATCH = async (req: NextRequest, { params }: { params: Promise<{ id
 // app/api/job/[id]/route.ts (add this below PATCH)
 export const DELETE = async (_req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
     try {
+        await checkAuthority();
         await connectToDB();
 
         const { id } = await params;

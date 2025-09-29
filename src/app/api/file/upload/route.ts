@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import checkAuthority from '@/lib/checkAuthority';
 import cloudinary from '@/lib/cloudinary';
 
 export const POST = async (req: NextRequest) => {
     try {
+        await checkAuthority();
+
         const formData = await req.formData();
         const file = formData.get('file') as File;
         const folderName = formData.get('folderName') as string;
