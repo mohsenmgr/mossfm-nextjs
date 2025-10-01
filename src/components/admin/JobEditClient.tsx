@@ -35,7 +35,7 @@ export default function JobEditClient({ job }: { job: JobItem }) {
             });
 
             if (response.ok) {
-                router.push('/admin/jobs');
+                router.push('/amin/jobs');
             } else {
                 console.error('Failed to save job:', await response.text());
             }

@@ -39,8 +39,24 @@ module.exports = {
         ];
 
         try {
+            let res;
+            // TODO: add feed updates to sitemap
+            // res = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_NAME}/api/feed?public=true`);
+            // if (!res.ok) throw new Error('Failed to fetch feed updates for sitemap');
+
+            // const updates = await res.json();
+            // updates.forEach((upd) => {
+            //     paths.push({
+            //         loc: `/feed/${upd._id}`, // Dynamic blog post
+            //         priority: 0.7,
+            //         changefreq: 'daily',
+            //         lastmod: new Date(upd.date).toISOString()
+            //     });
+            // });
+
+            // blog posts
             // Fetch all blog posts from your API
-            const res = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_NAME}/api/blog`);
+            res = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_NAME}/api/blog`);
             if (!res.ok) throw new Error('Failed to fetch blog posts for sitemap');
 
             const posts = await res.json();
@@ -52,8 +68,8 @@ module.exports = {
                     lastmod: new Date(post.date).toISOString()
                 });
             });
-        } catch (err) {
-            console.error('Sitemap generation error:', err);
+        } catch (error) {
+            console.log('Sitemap generation error,', error);
         }
 
         return paths;
