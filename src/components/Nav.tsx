@@ -56,6 +56,14 @@ function Nav() {
                         </Link>
                     </li>
                     <li>
+                        <Link
+                            href='/movies'
+                            className='transition-colors duration-300 ease-in-out hover:text-green-500'
+                            onClick={() => setIsOpen(false)}>
+                            Movies
+                        </Link>
+                    </li>
+                    <li>
                         <Link href='/about' className='transition-colors duration-300 ease-in-out hover:text-green-200'>
                             About
                         </Link>
@@ -112,6 +120,14 @@ function Nav() {
                             className='transition-colors duration-300 ease-in-out hover:text-green-500'
                             onClick={() => setIsOpen(false)}>
                             Feed
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            href='/movies'
+                            className='transition-colors duration-300 ease-in-out hover:text-green-500'
+                            onClick={() => setIsOpen(false)}>
+                            Movies
                         </Link>
                     </li>
                     <li>
