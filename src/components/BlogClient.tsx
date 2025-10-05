@@ -3,11 +3,6 @@
 import Link from 'next/link';
 
 import BlogCarousel from './BlogCarousel';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import { Navigation, Pagination } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
 
 function getExcerpt(content: string, length: number = 150) {
     const plain = content.replace(/[#_*~`>-]/g, '');

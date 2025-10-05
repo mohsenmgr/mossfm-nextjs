@@ -5,6 +5,8 @@ export interface IMovie extends Document {
     hidden: boolean;
     watched: boolean;
     dateWatched: string;
+    watchlist: boolean;
+    recommended: boolean;
     review: string;
     rating: number;
 }
@@ -26,6 +28,14 @@ const MovieSchema = new Schema<IMovie>(
             default: false
         },
         watched: {
+            type: Boolean,
+            default: false
+        },
+        watchlist: {
+            type: Boolean,
+            default: false
+        },
+        recommended: {
             type: Boolean,
             default: false
         },

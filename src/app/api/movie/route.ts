@@ -7,21 +7,50 @@ import Movie from '@/models/Movie';
 export const GET = async (req: NextRequest) => {
     await connectToDB();
 
+    const url = new URL(req.url);
+    const page = Number(url.searchParams.get('page') || 1);
+    const limit = Number(url.searchParams.get('limit') || 10);
+    const flagName = String(url.searchParams.get('category'));
+
+    const query: any = {};
+    query.false = true;
+
+    switch (flagName) {
+        case 'watchlist':
+            query.watchlist = true;
+            break;
+        case 'watched':
+            query.watched = true;
+            break;
+        case 'recommended':
+            query.recommended = true;
+            break;
+        default:
+            query.watchlist = true;
+            break;
+    }
+
     try {
         await checkAuthority();
-        console.log('check authority');
+        // Aauthorized → return all
         const movies = await Movie.find({});
         return new Response(JSON.stringify(movies), { status: 200 });
     } catch (error: unknown) {
         if (error instanceof Error && 'status' in error) {
-            console.log('going to catch');
-
             const httpError = error as { status?: number; message: string };
 
             if (httpError.status === 401) {
-                // Unauthorized → return all movies
-                const movies = await Movie.find({ hidden: false });
-                return new Response(JSON.stringify(movies), { status: 200 });
+                // Unauthorized → return not hidden movies
+
+                let total = await Movie.countDocuments(query);
+                total = Math.ceil(total / limit);
+
+                const movies = await Movie.find(query)
+                    .sort({ createdAt: -1 })
+                    .skip((page - 1) * limit)
+                    .limit(limit);
+
+                return new Response(JSON.stringify({ movies, total, page, limit }), { status: 200 });
             }
 
             return new Response(JSON.stringify({ error: httpError.message }), { status: httpError.status || 500 });

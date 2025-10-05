@@ -39,7 +39,6 @@ export default function FeedAdminPage() {
         if (!confirm('Are you sure you want to delete this post?')) return;
 
         const res = await fetch(`/api/feed/${id}`, { method: 'DELETE' });
-        console.log(res);
         if (res.ok) {
             removeItem(id);
         } else alert(`Delete request failed code:${res.status} status:${res.statusText}`);
