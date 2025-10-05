@@ -54,6 +54,10 @@ function AdminMovie() {
                 const response: { movies: LocalMovie[]; total: number; page: number; limit: number } =
                     await savedResponse.json();
 
+                if (!response || !Array.isArray(response.movies)) {
+                    throw new Error('Invalid response format');
+                }
+
                 const savedMovies: LocalMovie[] = response.movies;
 
                 // Fetch all TMDB details in parallel

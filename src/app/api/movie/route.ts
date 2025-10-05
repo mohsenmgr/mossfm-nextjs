@@ -13,7 +13,6 @@ export const GET = async (req: NextRequest) => {
     const flagName = String(url.searchParams.get('category'));
 
     const query: any = {};
-    query.false = true;
 
     switch (flagName) {
         case 'watchlist':
@@ -41,7 +40,7 @@ export const GET = async (req: NextRequest) => {
 
             if (httpError.status === 401) {
                 // Unauthorized → return not hidden movies
-
+                query.hidden = false;
                 let total = await Movie.countDocuments(query);
                 total = Math.ceil(total / limit);
 

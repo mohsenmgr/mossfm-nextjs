@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 import MovieCard from '@/components/admin/MovieCard';
 import MovieSearchForm from '@/components/admin/MovieSearchForm';
-import type { ApiMovie, Movie } from '@/types/ApiMovie';
+import type { ApiMovie, LocalMovie, Movie } from '@/types/ApiMovie';
 
 import { useDebounce } from 'react-use';
 
@@ -34,10 +34,21 @@ const AdminMovieSearch = () => {
                     accept: 'application/json'
                 }
             }); // create an endpoint that returns all saved movies
-            const savedMovies: { id: number; watched: boolean; hidden: boolean }[] = await savedResponse.json();
+            const savedMovies: LocalMovie[] = await savedResponse.json();
 
             // Create a lookup map for fast access
-            const savedMap = new Map(savedMovies.map((m) => [m.id, { watched: m.watched, hidden: m.hidden }]));
+            const savedMap = new Map(
+                savedMovies.map((m) => [
+                    m.id,
+                    {
+                        _id: m._id,
+                        watched: m.watched,
+                        hidden: m.hidden,
+                        recommended: m.recommended,
+                        watchlist: m.watchlist
+                    }
+                ])
+            );
 
             const endpoint = `${process.env.NEXT_PUBLIC_TMDB_API_BASE_URL}/search/${mediaType}?query=${encodeURIComponent(
                 input
@@ -65,14 +76,15 @@ const AdminMovieSearch = () => {
                 if (saved) {
                     return {
                         ...movie,
+                        _id: saved._id,
                         watched: saved.watched,
-                        hidden: saved.hidden
+                        hidden: saved.hidden,
+                        watchlist: saved.watchlist,
+                        recommended: saved.recommended
                     };
                 }
                 return {
-                    ...movie,
-                    watched: false,
-                    hidden: false
+                    ...movie
                 };
             });
 
@@ -115,6 +127,17 @@ const AdminMovieSearch = () => {
         } catch (error) {}
     };
 
+    const handleDeleteItem = async (movie: Movie) => {
+        const hasConfirmed = confirm('Are you sure you want to delete this Movie?');
+        if (hasConfirmed) {
+            const res = await fetch(`/api/movie/${movie._id}`, { method: 'DELETE' });
+            if (res.ok) {
+                const tmpMovies = movies.filter((m) => m._id !== movie._id);
+                setMovies(tmpMovies);
+            } else alert(`Delete request failed code:${res.status} status:${res.statusText}`);
+        }
+    };
+
     return (
         <main className='mx-auto min-h-screen max-w-6xl flex-1 p-6'>
             <Link
@@ -153,8 +176,8 @@ const AdminMovieSearch = () => {
                                     isAdmin={true}
                                     key={movie.id}
                                     movie={movie}
-                                    onAddToWatchlist={handleMovieChange}
-                                    onHide={handleMovieChange}
+                                    onMovieChange={handleMovieChange}
+                                    handleDelete={handleDeleteItem}
                                 />
                             ))}
                         </div>

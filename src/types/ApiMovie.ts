@@ -11,6 +11,7 @@ export type ApiMovie = {
 };
 
 export type Movie = ApiMovie & {
+    _id: string;
     hidden: boolean;
     watched: boolean;
     watchlist: boolean;
@@ -21,6 +22,7 @@ export type Movie = ApiMovie & {
 };
 
 export type LocalMovie = {
+    _id: string;
     id: number;
     hidden: boolean;
     watched: boolean;
@@ -30,18 +32,6 @@ export type LocalMovie = {
     review: string | null;
     rating: number | null;
 };
-export function toMovie(apiMovie: ApiMovie, dbMovie?: IMovie): Movie {
-    return {
-        ...apiMovie,
-        hidden: dbMovie?.hidden ?? false,
-        watched: dbMovie?.watched ?? false,
-        watchlist: dbMovie?.watched ?? false,
-        recommended: dbMovie?.recommended ?? false,
-        dateWatched: dbMovie?.dateWatched ?? null,
-        review: dbMovie?.review ?? null,
-        rating: dbMovie?.rating ?? null
-    };
-}
 
 export function toIMovie(movie: Movie): IMovie {
     return {

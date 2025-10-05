@@ -4,25 +4,42 @@ import { Movie } from '@/types/ApiMovie';
 
 type MovieProps = {
     movie: Movie;
-    onAddToWatchlist: (movie: Movie) => void;
-    onHide: (movie: Movie) => void;
+    onMovieChange: (movie: Movie) => void;
+    handleDelete: (movie: Movie) => void;
     isAdmin: boolean;
 };
 
-export default function MovieCard({ movie, onHide, onAddToWatchlist, isAdmin }: MovieProps) {
-    const [added, setAdded] = useState(movie.watched);
+export default function MovieCard({ movie, onMovieChange, handleDelete, isAdmin }: MovieProps) {
+    const [watchListed, setWatchlisted] = useState(movie.watchlist);
+    const [recommended, setRecommended] = useState(movie.recommended);
+    const [watched, setWatched] = useState(movie.watched);
+
+    console.log(recommended);
+
     const [hidden, setHidden] = useState(movie.hidden);
 
+    const toggleWatched = (movie: Movie) => {
+        setWatched(!watched);
+        movie.watched = !watched;
+        onMovieChange(movie);
+    };
+
     const toggleWatchlist = (movie: Movie) => {
-        setAdded(!added);
-        movie.watched = !added;
-        onAddToWatchlist(movie);
+        setWatchlisted(!watchListed);
+        movie.watchlist = !watchListed;
+        onMovieChange(movie);
+    };
+
+    const toggleRecommended = (movie: Movie) => {
+        setRecommended(!recommended);
+        movie.recommended = !recommended;
+        onMovieChange(movie);
     };
 
     const toggleHidden = (movie: Movie) => {
         setHidden(!hidden);
         movie.hidden = !movie.hidden;
-        onHide(movie);
+        onMovieChange(movie);
     };
 
     return (
@@ -53,15 +70,41 @@ export default function MovieCard({ movie, onHide, onAddToWatchlist, isAdmin }: 
 
                 {/* Action buttons */}
                 {isAdmin && (
-                    <div className='mt-4 flex gap-2'>
+                    <div className='mt-4 flex flex-wrap gap-2'>
                         {/* Watchlist Button */}
+                        <button
+                            onClick={() => toggleWatched(movie)}
+                            className={`flex-1 rounded px-3 py-2 text-sm text-white transition ${
+                                watched ? 'bg-green-700 hover:bg-green-600' : 'bg-green-600 hover:bg-green-500'
+                            }`}>
+                            {watched ? '✅ Watched' : '+ Watched'}
+                        </button>
+
                         <button
                             onClick={() => toggleWatchlist(movie)}
                             className={`flex-1 rounded px-3 py-2 text-sm text-white transition ${
-                                added ? 'bg-green-700 hover:bg-green-600' : 'bg-green-600 hover:bg-green-500'
+                                watchListed ? 'bg-green-700 hover:bg-green-600' : 'bg-green-600 hover:bg-green-500'
                             }`}>
-                            {added ? '✅ Added' : '+ Watchlist'}
+                            {watchListed ? '✅ In List' : '+ Watchlist'}
                         </button>
+
+                        <button
+                            onClick={() => toggleRecommended(movie)}
+                            className={`flex-1 rounded px-3 py-2 text-sm text-white transition ${
+                                recommended ? 'bg-green-700 hover:bg-green-600' : 'bg-green-600 hover:bg-green-500'
+                            }`}>
+                            {recommended ? '✅ Recommended' : '+ Recommended'}
+                        </button>
+
+                        {(watched || recommended || watchListed) && (
+                            <button
+                                onClick={() => handleDelete(movie)}
+                                className={
+                                    'flex-1 rounded bg-red-700 px-3 py-2 text-sm text-white transition hover:bg-red-600'
+                                }>
+                                Delete
+                            </button>
+                        )}
 
                         {/* Hide Button */}
                         <button
