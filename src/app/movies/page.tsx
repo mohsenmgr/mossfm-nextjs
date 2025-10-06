@@ -7,18 +7,19 @@ import Tabs from '@/components/tab';
 import { useMoviePagination } from '@/hooks/useMoviePagination';
 
 function PublicMovie() {
-    const { movies, isLoading, errorMessage, pageNumber, totalPages, setCategory, goToPage } =
+    const { movies, isLoading, errorMessage, pageNumber, totalPages, setCategory, goToPage, resetPage, setMovies } =
         useMoviePagination('watchlist');
 
     const handleCategoryChange = (index: number) => {
         const currentTab = tabData[index].label.toLowerCase();
+        resetPage();
         setCategory(currentTab);
     };
 
     const tabData = [
-        { label: 'Watchlist', content: <MovieGrid movies={movies} isAdmin={false} /> },
-        { label: 'Watched', content: <MovieGrid movies={movies} isAdmin={false} /> },
-        { label: 'Recommended', content: <MovieGrid movies={movies} isAdmin={false} /> }
+        { label: 'Watchlist', content: <MovieGrid setMovies={setMovies} movies={movies} isAdmin={false} /> },
+        { label: 'Watched', content: <MovieGrid setMovies={setMovies} movies={movies} isAdmin={false} /> },
+        { label: 'Recommended', content: <MovieGrid setMovies={setMovies} movies={movies} isAdmin={false} /> }
     ];
 
     return (

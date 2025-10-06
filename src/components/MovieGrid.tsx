@@ -6,10 +6,43 @@ import MovieCard from './admin/MovieCard';
 
 type MovieGridProps = {
     movies: Movie[];
+    setMovies: React.Dispatch<React.SetStateAction<Movie[]>>;
     isAdmin: boolean;
 };
 
-function MovieGrid({ movies, isAdmin }: MovieGridProps) {
+function MovieGrid({ movies, setMovies, isAdmin }: MovieGridProps) {
+    const handleMovieChange = async (movie: Movie) => {
+        try {
+            const response = await fetch('/api/movie/new', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(movie)
+            });
+
+            if (!response.ok) {
+                const res = await response.text();
+                alert(`Failed to save movie: ${res}`);
+                console.error('Failed to save movie:', res);
+            }
+        } catch (error) {
+            alert(`Catch save movie error: ${error}`);
+            console.error('Catch save movie error:', error);
+        }
+    };
+
+    const handleDeleteItem = async (movie: Movie) => {
+        const hasConfirmed = confirm('Are you sure you want to delete this Movie?');
+        if (hasConfirmed) {
+            const res = await fetch(`/api/movie/${movie._id}`, { method: 'DELETE' });
+            if (res.ok) {
+                const tmpMovies = movies.filter((m) => m._id !== movie._id);
+                setMovies(tmpMovies);
+            } else alert(`Delete request failed code:${res.status} status:${res.statusText}`);
+        }
+    };
+
     return (
         <>
             {/* Movie Grid */}
@@ -24,8 +57,8 @@ function MovieGrid({ movies, isAdmin }: MovieGridProps) {
                                     isAdmin={isAdmin}
                                     key={movie.id}
                                     movie={movie}
-                                    onAddToWatchlist={() => console.log()}
-                                    onHide={() => console.log()}
+                                    onMovieChange={handleMovieChange}
+                                    handleDelete={handleDeleteItem}
                                 />
                             ))}
                         </div>

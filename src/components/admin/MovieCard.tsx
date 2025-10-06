@@ -105,7 +105,7 @@ export default function MovieCard({ movie, onMovieChange, handleDelete, isAdmin 
                         </button>
 
                         {/* Delete Button */}
-                        {(watched || recommended || watchListed) && (
+                        {movie._id && (
                             <button
                                 onClick={() => handleDelete(movie)}
                                 className='w-full rounded-xl bg-red-500 px-4 py-2.5 text-sm font-medium text-white shadow-md transition hover:bg-red-400'>

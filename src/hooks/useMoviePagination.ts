@@ -24,6 +24,10 @@ export function useMoviePagination(initialCategory = 'watchlist') {
     const [totalPages, setTotalPages] = useState(1);
     const [category, setCategory] = useState(initialCategory);
 
+    const resetPage = () => {
+        setPageNumber(1);
+    };
+
     const goToPage = (p: number) => {
         if (p >= 1 && p <= totalPages) {
             setPageNumber(p);
@@ -72,12 +76,14 @@ export function useMoviePagination(initialCategory = 'watchlist') {
 
     return {
         movies,
+        setMovies,
         isLoading,
         errorMessage,
         pageNumber,
         totalPages,
         category,
         setCategory,
-        goToPage
+        goToPage,
+        resetPage
     };
 }

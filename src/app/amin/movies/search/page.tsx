@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
+import MovieGrid from '@/components/MovieGrid';
 import MovieCard from '@/components/admin/MovieCard';
 import MovieSearchForm from '@/components/admin/MovieSearchForm';
 import type { ApiMovie, LocalMovie, Movie } from '@/types/ApiMovie';
@@ -109,38 +110,6 @@ const AdminMovieSearch = () => {
         }
     };
 
-    const handleMovieChange = async (movie: Movie) => {
-        try {
-            const response = await fetch('/api/movie/new', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(movie)
-            });
-
-            if (!response.ok) {
-                const res = await response.text();
-                alert(`Failed to save movie: ${res}`);
-                console.error('Failed to save movie:', res);
-            }
-        } catch (error) {
-            alert(`Catch save movie error: ${error}`);
-            console.error('Catch save movie error:', error);
-        }
-    };
-
-    const handleDeleteItem = async (movie: Movie) => {
-        const hasConfirmed = confirm('Are you sure you want to delete this Movie?');
-        if (hasConfirmed) {
-            const res = await fetch(`/api/movie/${movie._id}`, { method: 'DELETE' });
-            if (res.ok) {
-                const tmpMovies = movies.filter((m) => m._id !== movie._id);
-                setMovies(tmpMovies);
-            } else alert(`Delete request failed code:${res.status} status:${res.statusText}`);
-        }
-    };
-
     return (
         <main className='mx-auto min-h-screen max-w-6xl flex-1 p-6'>
             <Link
@@ -167,46 +136,32 @@ const AdminMovieSearch = () => {
             {isLoading && <h3 className='text-center text-gray-400'>Loading...</h3>}
             {errorMessage && <h4 className='text-center text-red-500'>{errorMessage}</h4>}
 
-            {/* Movie Grid */}
-            <div className='min-h-[70vh] rounded-2xl bg-gray-800 p-6 shadow-lg'>
-                {movies.length === 0 ? (
-                    <p className='text-center text-gray-400'>Start typing to search for movies...</p>
-                ) : (
-                    <>
-                        <div className='grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-                            {movies.map((movie) => (
-                                <MovieCard
-                                    isAdmin={true}
-                                    key={movie.id}
-                                    movie={movie}
-                                    onMovieChange={handleMovieChange}
-                                    handleDelete={handleDeleteItem}
-                                />
-                            ))}
-                        </div>
+            <div>
+                {/* Movie Grid */}
+                <MovieGrid movies={movies} setMovies={setMovies} isAdmin={true} />
 
-                        {/* Pagination */}
-                        <div className='mt-6 flex justify-center space-x-2'>
-                            <button
-                                disabled={page === 1}
-                                onClick={() => goToPage(page - 1)}
-                                className='rounded bg-gray-700 px-3 py-1 text-sm text-white hover:bg-gray-600 disabled:opacity-50'>
-                                Prev
-                            </button>
+                {/* Pagination */}
+                <div>
+                    <div className='mt-6 flex justify-center space-x-2'>
+                        <button
+                            disabled={page === 1}
+                            onClick={() => goToPage(page - 1)}
+                            className='rounded bg-gray-700 px-3 py-1 text-sm text-white hover:bg-gray-600 disabled:opacity-50'>
+                            Prev
+                        </button>
 
-                            <span className='px-2 py-1 text-gray-300'>
-                                Page {page} of {totalPages}
-                            </span>
+                        <span className='px-2 py-1 text-gray-300'>
+                            Page {page} of {totalPages}
+                        </span>
 
-                            <button
-                                disabled={page === totalPages}
-                                onClick={() => goToPage(page + 1)}
-                                className='rounded bg-gray-700 px-3 py-1 text-sm text-white hover:bg-gray-600 disabled:opacity-50'>
-                                Next
-                            </button>
-                        </div>
-                    </>
-                )}
+                        <button
+                            disabled={page === totalPages}
+                            onClick={() => goToPage(page + 1)}
+                            className='rounded bg-gray-700 px-3 py-1 text-sm text-white hover:bg-gray-600 disabled:opacity-50'>
+                            Next
+                        </button>
+                    </div>
+                </div>
             </div>
         </main>
     );

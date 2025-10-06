@@ -11,16 +11,17 @@ import { useMoviePagination } from '@/hooks/useMoviePagination';
 import { Movie } from '@/types/ApiMovie';
 
 function AdminMovie() {
-    const { movies, isLoading, errorMessage, pageNumber, totalPages, setCategory, goToPage } =
+    const { movies, setMovies, isLoading, errorMessage, pageNumber, totalPages, setCategory, goToPage, resetPage } =
         useMoviePagination('watchlist');
     const handleCategoryChange = (index: number) => {
         const currentTab = tabData[index].label.toLowerCase();
+        resetPage();
         setCategory(currentTab);
     };
     const tabData = [
-        { label: 'Watchlist', content: <MovieGrid movies={movies} isAdmin={true} /> },
-        { label: 'Watched', content: <MovieGrid movies={movies} isAdmin={true} /> },
-        { label: 'Recommended', content: <MovieGrid movies={movies} isAdmin={true} /> }
+        { label: 'Watchlist', content: <MovieGrid setMovies={setMovies} movies={movies} isAdmin={true} /> },
+        { label: 'Watched', content: <MovieGrid setMovies={setMovies} movies={movies} isAdmin={true} /> },
+        { label: 'Recommended', content: <MovieGrid setMovies={setMovies} movies={movies} isAdmin={true} /> }
     ];
 
     return (
