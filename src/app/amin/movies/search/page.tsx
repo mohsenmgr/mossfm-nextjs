@@ -28,7 +28,7 @@ const AdminMovieSearch = () => {
 
         try {
             // fetch db movies
-            const savedResponse = await fetch('/api/movie', {
+            const savedResponse = await fetch('/api/movies', {
                 method: 'GET',
                 headers: {
                     accept: 'application/json'
@@ -119,12 +119,15 @@ const AdminMovieSearch = () => {
                 body: JSON.stringify(movie)
             });
 
-            if (response.ok) {
-                alert('movie added');
-            } else {
-                console.error('Failed to save movie:', await response.text());
+            if (!response.ok) {
+                const res = await response.text();
+                alert(`Failed to save movie: ${res}`);
+                console.error('Failed to save movie:', res);
             }
-        } catch (error) {}
+        } catch (error) {
+            alert(`Catch save movie error: ${error}`);
+            console.error('Catch save movie error:', error);
+        }
     };
 
     const handleDeleteItem = async (movie: Movie) => {

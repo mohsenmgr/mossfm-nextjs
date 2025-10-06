@@ -4,54 +4,24 @@ import React, { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
+import MovieGrid from '@/components/MovieGrid';
 import MovieCard from '@/components/admin/MovieCard';
+import Tabs from '@/components/tab';
+import { useMoviePagination } from '@/hooks/useMoviePagination';
 import { Movie } from '@/types/ApiMovie';
 
 function AdminMovie() {
-    const [movies, setMovies] = useState<Movie[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
-
-    useEffect(() => {
-        const fetchMovies = async () => {
-            try {
-                const savedResponse = await fetch('/api/movie', {
-                    method: 'GET',
-                    headers: { accept: 'application/json' }
-                });
-
-                const savedMovies: { id: number; watched: boolean; hidden: boolean }[] = await savedResponse.json();
-
-                // Fetch all TMDB details in parallel
-                const moviesWithDetails = await Promise.all(
-                    savedMovies.map(async (movie) => {
-                        const endpoint = `${process.env.NEXT_PUBLIC_TMDB_API_BASE_URL}/movie/${movie.id}?language=en-US`;
-                        const response = await fetch(endpoint, {
-                            method: 'GET',
-                            headers: {
-                                accept: 'application/json',
-                                Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_KEY}`
-                            }
-                        });
-
-                        if (!response.ok) throw new Error('Failed to fetch movie');
-                        const data = await response.json();
-
-                        return { ...data, ...movie }; // merge db fields with TMDB data
-                    })
-                );
-
-                setMovies(moviesWithDetails);
-            } catch (error) {
-                console.error('Error fetching movies:', error);
-                setErrorMessage('Error');
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchMovies();
-    }, []); // ✅ empty dependency array
+    const { movies, isLoading, errorMessage, pageNumber, totalPages, setCategory, goToPage } =
+        useMoviePagination('watchlist');
+    const handleCategoryChange = (index: number) => {
+        const currentTab = tabData[index].label.toLowerCase();
+        setCategory(currentTab);
+    };
+    const tabData = [
+        { label: 'Watchlist', content: <MovieGrid movies={movies} isAdmin={true} /> },
+        { label: 'Watched', content: <MovieGrid movies={movies} isAdmin={true} /> },
+        { label: 'Recommended', content: <MovieGrid movies={movies} isAdmin={true} /> }
+    ];
 
     return (
         <main className='mx-auto min-h-screen max-w-6xl flex-1 p-6'>
@@ -76,24 +46,29 @@ function AdminMovie() {
             {errorMessage && <h4 className='text-center text-red-500'>{errorMessage}</h4>}
 
             {/* Movie Grid */}
-            <div className='min-h-[70vh] rounded-2xl bg-gray-800 p-6 shadow-lg'>
-                {movies.length === 0 ? (
-                    <p className='text-center text-gray-400'>Loading movies...</p>
-                ) : (
-                    <>
-                        <div className='grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-                            {movies.map((movie) => (
-                                <MovieCard
-                                    isAdmin={false}
-                                    key={movie.id}
-                                    movie={movie}
-                                    onAddToWatchlist={() => console.log()}
-                                    onHide={() => console.log()}
-                                />
-                            ))}
-                        </div>
-                    </>
-                )}
+            <div className='flex-1 p-0'>
+                {/*  <h1 className='mb-4 text-2xl font-bold text-white'></h1> */}
+                <Tabs tabs={tabData} parentNotifyChange={handleCategoryChange} />
+            </div>
+
+            <div className='mt-6 flex justify-center space-x-2'>
+                <button
+                    disabled={pageNumber === 1}
+                    onClick={() => goToPage(pageNumber - 1)}
+                    className='rounded bg-gray-700 px-3 py-1 text-sm text-white hover:bg-gray-600 disabled:opacity-50'>
+                    Prev
+                </button>
+
+                <span className='px-2 py-1 text-gray-300'>
+                    Page {pageNumber} of {totalPages}
+                </span>
+
+                <button
+                    disabled={pageNumber === totalPages}
+                    onClick={() => goToPage(pageNumber + 1)}
+                    className='rounded bg-gray-700 px-3 py-1 text-sm text-white hover:bg-gray-600 disabled:opacity-50'>
+                    Next
+                </button>
             </div>
         </main>
     );

@@ -32,8 +32,14 @@ export const GET = async (req: NextRequest) => {
     try {
         await checkAuthority();
         // Aauthorized → return all
-        const movies = await Movie.find({});
-        return new Response(JSON.stringify(movies), { status: 200 });
+        let total = await Movie.countDocuments(query);
+        total = Math.ceil(total / limit);
+
+        const movies = await Movie.find(query)
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit);
+        return new Response(JSON.stringify({ movies, total, page, limit }), { status: 200 });
     } catch (error: unknown) {
         if (error instanceof Error && 'status' in error) {
             const httpError = error as { status?: number; message: string };
