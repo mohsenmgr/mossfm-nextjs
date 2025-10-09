@@ -15,6 +15,7 @@ import {
     FaQuoteLeft,
     FaRss,
     FaSignOutAlt,
+    FaTwitter,
     FaUser
 } from 'react-icons/fa';
 import { FaNoteSticky } from 'react-icons/fa6';
@@ -32,7 +33,8 @@ export default function DashboardClient({ session }: { session: any }) {
         { title: 'Social', icon: <FaInstagram />, href: '/amin/social', query: '' },
         { title: 'Books', icon: <FaBook />, href: '/amin/books', query: '' },
         { title: 'Music', icon: <FaMusic />, href: '/amin/music', query: '' },
-        { title: 'Movies', icon: <FaFilm />, href: '/amin/movies', query: '' }
+        { title: 'Movies', icon: <FaFilm />, href: '/amin/movies', query: '' },
+        { title: 'Tracker', icon: <FaTwitter />, href: '/amin/tracker', query: '' }
     ];
 
     return (
