@@ -32,18 +32,24 @@ const TrackerGrid = (props: TrackerGridProps) => {
                         {items.map((item, index) => (
                             <li
                                 key={index}
-                                className='flex items-center justify-between rounded-lg border border-gray-800 bg-gray-800 p-4 shadow-md transition hover:border-green-500 hover:bg-gray-700'>
-                                <div className='w-xl'>
+                                className='flex flex-col gap-2 rounded-lg border border-gray-800 bg-gray-800 p-4 shadow-md transition hover:border-green-500 hover:bg-gray-700 sm:flex-row sm:items-center sm:justify-between'>
+                                {/* Content columns */}
+                                <div className='w-full sm:w-1/4'>
                                     <span className='font-medium text-white'>{item.handle}</span>
                                 </div>
-                                <div className='w-xl'>
-                                    {item.name && <span className='font-medium text-white'>{item.name}</span>}
-                                </div>
-                                <div className='w-xl'>
-                                    {item.surname && <span className='font-medium text-white'>{item.surname}</span>}
-                                </div>
-                                {/* Example action buttons (optional) */}
-                                <div className='flex gap-2'>
+                                {item.name && (
+                                    <div className='w-full sm:w-1/4'>
+                                        <span className='font-medium text-white'>{item.name}</span>
+                                    </div>
+                                )}
+                                {item.surname && (
+                                    <div className='w-full sm:w-1/4'>
+                                        <span className='font-medium text-white'>{item.surname}</span>
+                                    </div>
+                                )}
+
+                                {/* Action buttons */}
+                                <div className='flex w-full flex-wrap gap-2 sm:w-auto'>
                                     <button className='rounded bg-yellow-500 px-3 py-1 text-sm text-white hover:bg-yellow-400'>
                                         Edit
                                     </button>
@@ -57,8 +63,7 @@ const TrackerGrid = (props: TrackerGridProps) => {
                                             defaultChecked={checked}
                                             id='checked-checkbox'
                                             type='checkbox'
-                                            value=''
-                                            className='h-5 w-5 rounded-sm border-gray-300 bg-green-100 text-green-600 focus:ring-2 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-green-600'
+                                            className='h-5 w-5 rounded-sm border-gray-300 bg-green-100 text-green-600 focus:ring-2 focus:ring-green-500'
                                             onClick={() => setChecked((prev) => !prev)}
                                         />
                                     </div>

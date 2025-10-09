@@ -73,29 +73,29 @@ const TrackerForm = (props: TrackFormProps) => {
 
     return (
         <>
-            <div className='flex items-center gap-2 align-middle'>
+            <div className='flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center'>
                 <input
                     placeholder='Username'
-                    className='w-xl rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-sm text-white placeholder-gray-400 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 focus:outline-none'
+                    className='w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-sm text-white placeholder-gray-400 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 focus:outline-none sm:w-48'
                     type='text'
                     value={username}
                     onChange={(e) => setUserName(e.target.value)}
                 />
                 <input
                     placeholder='Name'
-                    className='w-xl rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-sm text-white placeholder-gray-400 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 focus:outline-none'
+                    className='w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-sm text-white placeholder-gray-400 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 focus:outline-none sm:w-48'
                     type='text'
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                 />
                 <input
                     placeholder='Surname'
-                    className='w-xl rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-sm text-white placeholder-gray-400 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 focus:outline-none'
+                    className='w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-sm text-white placeholder-gray-400 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-500 focus:outline-none sm:w-48'
                     type='text'
                     value={surname}
                     onChange={(e) => setSurname(e.target.value)}
                 />
-                <div className='w-xl'>
+                <div className='w-full sm:w-48'>
                     <select
                         value={socialMedia}
                         onChange={(e) => {
@@ -118,15 +118,16 @@ const TrackerForm = (props: TrackFormProps) => {
                         username.trim() === ''
                             ? 'cursor-not-allowed bg-gray-500 text-gray-300'
                             : 'bg-green-600 text-white hover:bg-green-500'
-                    }}`}
+                    }`}
                     onClick={() => handleButtonOK()}
                     disabled={!disabled && username.trim() === ''}>
                     OK
                 </button>
                 <button
-                    className={`flex h-10 items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-white transition hover:bg-green-500`}
+                    className='flex h-10 items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-white transition hover:bg-green-500'
                     onClick={() => handleButtonSearch()}>
                     <FaSearch className='text-sm' />
+                    <span>Search</span>
                 </button>
             </div>
         </>
