@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import Skeleton from '@/components/Skeleton';
 import AboutMeAdmin from '@/components/admin/AboutMeAdmin';
+import { FileUpload } from '@/lib/fileUpload';
 import type { AboutMeObj } from '@/types/aboutMe';
 
 function page() {
@@ -14,15 +15,24 @@ function page() {
     const [aboutMe, setAboutMe] = useState<AboutMeObj>({
         _id: '',
         text: [],
-        skills: []
+        skills: [],
+        photoUrl: ''
     });
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState(true);
+    const [profilePhotoFile, setProfilePhotoFile] = useState<File | null>(null);
 
     const onSave = async (obj: AboutMeObj) => {
         if (obj._id === '') {
             alert('about._id not set');
             return;
+        }
+
+        if (profilePhotoFile) {
+            const files = [profilePhotoFile];
+            // --- Upload profile photo to Cloudinary ---
+            const photoUrls = await FileUpload(files, 'image', 'about');
+            if (photoUrls.length > 0) obj.photoUrl = photoUrls[0];
         }
 
         const res = await fetch(`/api/about/${obj._id}`, {
@@ -68,7 +78,7 @@ function page() {
                 {loading ? (
                     Array.from({ length: 2 }).map((_, i) => <Skeleton key={i} />)
                 ) : (
-                    <AboutMeAdmin aboutMeObject={aboutMe} onSave={onSave} />
+                    <AboutMeAdmin aboutMeObject={aboutMe} onSave={onSave} setProfilePhotoFile={setProfilePhotoFile} />
                 )}
             </main>
         </>

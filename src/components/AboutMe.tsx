@@ -19,7 +19,8 @@ const SimpleChip: FC<SimpleChipProps> = ({ chipText }) => {
 const AboutMe: FC = () => {
     const [aboutMe, setAboutMe] = useState<Partial<IAbout>>({
         text: [],
-        skills: []
+        skills: [],
+        photoUrl: ''
     });
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState(true);
@@ -46,7 +47,7 @@ const AboutMe: FC = () => {
             <div className='flex flex-col items-center gap-6'>
                 <div className='h-40 w-40 overflow-hidden rounded-full border-4 border-green-200'>
                     <Image
-                        src='/images/mohsen.png'
+                        src={aboutMe.photoUrl || '/images/mohsen.png'}
                         alt='MossFM profile pic'
                         className='h-full w-full object-cover'
                         width={150}

@@ -49,9 +49,10 @@ export function parseHtmlToItems(html: string): AboutMeTextItem[] {
 interface AboutMeAdminProps {
     aboutMeObject: AboutMeObj;
     onSave: (obj: AboutMeObj) => Promise<void>;
+    setProfilePhotoFile: (file: File | null) => void;
 }
 
-export default function AboutMeAdmin({ aboutMeObject, onSave }: AboutMeAdminProps) {
+export default function AboutMeAdmin({ aboutMeObject, onSave, setProfilePhotoFile }: AboutMeAdminProps) {
     const [rawHtml, setRawHtml] = useState('');
     const [skills, setSkills] = useState<string[]>([]);
     const [newSkill, setNewSkill] = useState('');
@@ -154,6 +155,21 @@ export default function AboutMeAdmin({ aboutMeObject, onSave }: AboutMeAdminProp
                             Add
                         </button>
                     </div>
+                </div>
+
+                <div>
+                    <label className='block text-sm font-medium text-gray-200'>Upload Photos</label>
+                    <input
+                        type='file'
+                        accept='image/*'
+                        onChange={(e) => {
+                            const file = e.target.files?.[0]; // only one file
+                            if (file) {
+                                setProfilePhotoFile(file);
+                            }
+                        }}
+                        className='mt-2 block w-full text-sm text-gray-200 file:mr-4 file:rounded-lg file:border-0 file:bg-green-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-green-700 hover:file:bg-green-100'
+                    />
                 </div>
 
                 {/* Save */}
