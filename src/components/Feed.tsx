@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import Image from 'next/image';
 
 import { useFeedFetch } from '@/hooks/usePaginatedFetch';
+import { IAbout } from '@/models/About';
 import type { FeedImage } from '@/types/feed';
 import { AdvancedImage } from '@cloudinary/react';
 import type { CloudinaryImage } from '@cloudinary/url-gen';
@@ -19,17 +20,32 @@ export interface FeedItem {
 
 interface FeedProps {
     apiUrl: string; // e.g., '/api/feed'
-    profileImage: string;
     authorName: string;
 }
 
-const Feed: React.FC<FeedProps> = ({ apiUrl, profileImage, authorName }) => {
+const Feed: React.FC<FeedProps> = ({ apiUrl, authorName }) => {
     const [expanded, setExpanded] = useState<{ _id: string | null; height: number | null }>({
         _id: null,
         height: null
     });
 
+    const [profileImage, setProfileImage] = useState<string>('/images/mohsen.png');
     const containerRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
+    useEffect(() => {
+        const fetAboutMe = async () => {
+            try {
+                const res = await fetch('/api/about'); // your GET API route
+                if (!res.ok) throw new Error('Failed to fetch jobs');
+                const data: IAbout = await res.json();
+                if (data.photoUrl && data.photoUrl !== '') setProfileImage(data.photoUrl);
+            } catch (err: any) {
+                console.log(err.message || 'Something went wrong');
+            }
+        };
+
+        fetAboutMe();
+    }, []);
 
     // Fetch paginated feed
     const { data: items = [], loading, loadMore, hasMore } = useFeedFetch<FeedItem>(apiUrl, 5);

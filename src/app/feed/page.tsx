@@ -62,7 +62,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Page() {
     return (
         <div className='min-h-screen bg-gray-100 p-6 dark:bg-gray-950'>
-            <Feed apiUrl='/api/feed?public=true' profileImage='/images/mohsen.png' authorName='MossFM' />
+            <Feed apiUrl='/api/feed?public=true' authorName='MossFM' />
         </div>
     );
 }
