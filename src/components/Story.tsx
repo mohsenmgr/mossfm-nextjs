@@ -65,7 +65,7 @@ export default function StoryModal({ onClose }: Props) {
             storyTimer.current = setTimeout(() => {
                 if (activeIndex < stories.length - 1) setActiveIndex(activeIndex + 1);
                 else onClose();
-            }, 30 * 1000);
+            }, 5 * 1000);
         }
         return () => {
             if (storyTimer.current) clearTimeout(storyTimer.current);
