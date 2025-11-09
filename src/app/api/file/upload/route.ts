@@ -1,30 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import checkAuthority from '@/lib/checkAuthority';
-import cloudinary from '@/lib/cloudinary';
+import { StreamUpload } from '@/lib/streamUpload';
 
 export const POST = async (req: NextRequest) => {
     try {
         await checkAuthority();
 
         const formData = await req.formData();
-        const file = formData.get('file') as File;
-        const folderName = formData.get('folderName') as string;
-
-        if (!file) {
-            return NextResponse.json({ error: 'No file provided' }, { status: 400 });
-        }
-
-        const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
-
-        const uploadResult: any = await new Promise((resolve, reject) => {
-            const stream = cloudinary.uploader.upload_stream({ folder: folderName }, (error, result) => {
-                if (error) reject(error);
-                else resolve(result);
-            });
-            stream.end(buffer);
-        });
+        const uploadResult = await StreamUpload(formData);
 
         return NextResponse.json(
             {
