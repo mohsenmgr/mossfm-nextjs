@@ -8,7 +8,7 @@ type UploadResult = {
 export const StreamUpload = async (formData: FormData): Promise<UploadResult> => {
     try {
         const file = formData.get('file') as File;
-        const folderName = (formData.get('folderName') as string) || 'general';
+        const folderName = (formData.get('folder') as string) || 'general';
 
         if (!file) {
             throw new Error('No file provided');
