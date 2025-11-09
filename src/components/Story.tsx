@@ -27,6 +27,7 @@ export default function StoryModal({ onClose }: Props) {
     const [showNameInput, setShowNameInput] = useState(false);
     const [commentInput, setCommentInput] = useState('');
     const [likedByMe, setLikedByMe] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);
 
     const storyTimer = useRef<NodeJS.Timeout | null>(null);
     const story = stories[activeIndex];
@@ -57,9 +58,9 @@ export default function StoryModal({ onClose }: Props) {
         setLikedByMe(story.likes?.includes(userId) || false);
     }, [story]);
 
-    // Auto-advance images every 30 seconds
+    // Auto-advance images every 5 seconds
     useEffect(() => {
-        if (!story || !showStory) return;
+        if (!story || !showStory || isPaused) return; // <-- skip if paused
         if (story.mediaType === 'image') {
             if (storyTimer.current) clearTimeout(storyTimer.current);
             storyTimer.current = setTimeout(() => {
@@ -70,7 +71,7 @@ export default function StoryModal({ onClose }: Props) {
         return () => {
             if (storyTimer.current) clearTimeout(storyTimer.current);
         };
-    }, [activeIndex, showStory, story]);
+    }, [activeIndex, showStory, story, isPaused]);
 
     if (!stories.length) return null;
 
@@ -199,6 +200,8 @@ export default function StoryModal({ onClose }: Props) {
 
                         <div className='relative flex-1'>
                             <input
+                                onFocus={() => setIsPaused(true)}
+                                onBlur={() => setIsPaused(false)}
                                 type='text'
                                 placeholder='Add a comment...'
                                 value={commentInput}
